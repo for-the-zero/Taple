@@ -1,0 +1,87 @@
+@font-face{
+    font-family: 'Wanted Sans Std';
+    src: url('./WantedSansStd-Regular.otf');
+}
+body{
+    font-family: 'Wanted Sans Std','Noto Sans SC';
+    color: #303030;
+    background-color: #E6E6E6;
+    margin: 0;
+    padding: 0;
+}
+.controls-bar,.add-bar,.material-icons,.material-icons-outlined{
+    user-select: none;
+}
+
+.controls-bar,.add-bar{
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 114514;
+    background-color: white;
+    border-radius: 15px;
+    gap: 5px;
+    padding: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+.controls-bar{
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.controls-bar button,.add-bar button{
+    font-size: 30px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    aspect-ratio: 1/1;
+}
+.controls-bar button.selected-controls,.add-bar button.selected-add{
+    background-color: lightseagreen;
+    color: white;
+    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.11);
+}
+.add-bar{
+    transform: translateX(-50%) translateY(calc(100% + 10px));
+}
+.menu{
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    background-color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(114.514%);
+    z-index: 114514191810;
+    padding: 20px;
+    width: 65vw;
+    max-height: 80vw;
+    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.11);
+    overflow-y: auto;
+}
+.menu.show{
+    transform: translateX(-50%) translateY(0);
+    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.11);
+    /* transition: all 0.3s cubic-bezier(0.38, 0, 0.19, 1.03); */
+}
+.as-list{
+    list-style: none;
+    gap: 5px;
+    padding: 0;
+}
+.as-list li{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    padding: 2.5px;
+    cursor: pointer;
+    height: 40px;
+}
+.as-list li:hover{
+    background-color: lightgray;
+}
