@@ -94,14 +94,43 @@ const cvs_ctx = natele_canvas.getContext('2d');
 var now_table = {};
 // Example table start
 // TODO: del this
-now_table = {heads: {column: [['c1',100],['c2',20],['c3',150],], row: [['r1',100],['r2',100],['r3',100],]},cells: {'0-0': ['cell1',0,0,null],'0-1': ['cell2',0,1,null],'0-2': ['cell3',0,2,null],'1-0': ['',1,0,'0-0'],'1-1': ['cell4',1,1,null],'1-2': ['cell5',1,2,null],'2-0': ['cell6',2,0,null],'2-1': ['cell7',2,1,null],'2-2': ['cell8',2,2,null],}};
+now_table = {
+    heads: {
+        col: [
+            ['c1',100],
+            ['c2',20],
+            ['c3',150],
+        ], 
+        row: [
+            ['r1',100],
+            ['r2',100],
+            ['r3',100],
+        ],
+        colh_height: 100,
+        rowh_height: 100
+    },
+    cells: {
+        '0-0': ['cell1',0,0,null],
+        '0-1': ['cell2',0,1,null],
+        '0-2': ['cell3',0,2,null],
+        '1-0': ['',1,0,'0-0'],
+        '1-1': ['cell4',1,1,null],
+        '1-2': ['cell5',1,2,null],
+        '2-0': ['cell6',2,0,null],
+        '2-1': ['cell7',2,1,null],
+        '2-2': ['cell8',2,2,null],
+    }
+};
 // Example table end
+natele_canvas.width = window.innerWidth * 1.5;
+natele_canvas.height = window.innerHeight * 1.5;
 window.addEventListener('resize',function(){
     natele_canvas.width = window.innerWidth;
     natele_canvas.height = window.innerHeight;
 });
 function draw(){
-    taple(cvs_ctx,now_table,0,60,cell_divider);
+    cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
+    taple(cvs_ctx,now_table,0,90,cell_divider);
     requestAnimationFrame(draw);
 };
 draw();
