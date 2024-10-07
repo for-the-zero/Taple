@@ -98,7 +98,7 @@ now_table = {
     heads: {
         col: [
             ['c1',100],
-            ['c2',20],
+            ['c2',200],
             ['c3',150],
         ], 
         row: [
@@ -106,8 +106,8 @@ now_table = {
             ['r2',100],
             ['r3',100],
         ],
-        colh_height: 100,
-        rowh_height: 100
+        colh_height: 70,
+        rowh_height: 70
     },
     cells: {
         '0-0': ['cell1',0,0,null],
