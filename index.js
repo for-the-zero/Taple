@@ -97,7 +97,7 @@ var now_table = {};
 now_table = {
     heads: {
         col: [
-            ['c1',100],
+            ['c1',300],
             ['c2',200],
             ['c3',150],
         ], 
@@ -110,23 +110,23 @@ now_table = {
         rowh_height: 70
     },
     cells: {
-        '0-0': ['cell1',0,0,null],
-        '0-1': ['cell2',0,1,null],
-        '0-2': ['cell3',0,2,null],
-        '1-0': ['',1,0,'0-0'],
-        '1-1': ['cell4',1,1,null],
-        '1-2': ['cell5',1,2,null],
-        '2-0': ['cell6',2,0,null],
-        '2-1': ['cell7',2,1,null],
-        '2-2': ['cell8',2,2,null],
+        '0-0': ['cell1',true,'parent'],
+        '0-1': ['cell2',false,null],
+        '0-2': ['cell3',false,null],
+        '1-0': ['',true,'0-0'],
+        '1-1': ['cell4',true,'parent'],
+        '1-2': ['cell5',false,null],
+        '2-0': ['cell6',false,null],
+        '2-1': ['',true,'1-1'],
+        '2-2': ['cell7',false,null],
     }
 };
 // Example table end
 natele_canvas.width = window.innerWidth * 1.5;
 natele_canvas.height = window.innerHeight * 1.5;
 window.addEventListener('resize',function(){
-    natele_canvas.width = window.innerWidth;
-    natele_canvas.height = window.innerHeight;
+    natele_canvas.width = window.innerWidth * 1.5;
+    natele_canvas.height = window.innerHeight * 1.5;
 });
 function draw(){
     cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
