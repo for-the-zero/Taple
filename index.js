@@ -115,10 +115,10 @@ now_table = {
         '0-2': ['cell3',false,null],
         '1-0': ['',true,'0-0'],
         '1-1': ['cell4',true,'parent'],
-        '1-2': ['cell5',false,null],
+        '1-2': ['cell5',true,'1-1'],
         '2-0': ['cell6',false,null],
         '2-1': ['',true,'1-1'],
-        '2-2': ['cell7',false,null],
+        '2-2': ['cell5',false,null],
     }
 };
 // Example table end
@@ -130,7 +130,11 @@ window.addEventListener('resize',function(){
 });
 function draw(){
     cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
+    cvs_ctx.stokeStyle = 'black';
     taple(cvs_ctx,now_table,0,90,cell_divider);
-    requestAnimationFrame(draw);
+    let testing = true; //TODO: false
+    if(!testing){
+        requestAnimationFrame(draw);
+    };
 };
 draw();

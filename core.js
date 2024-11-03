@@ -208,116 +208,143 @@ function find_it_in_spcell_list(cell_key, spcell_list){
     };
     return -1;
 };
-function handle_spcell_list(ctx, table_obj, x, y, is_divider, spcell_list){ // TODO: 无法使用，需修改
-    vcursor = {x:x, y:y};
-    for(let spcell_obj of spcell_list){
-        let parent_cell = table_obj.cells[spcell_obj[0]];
-        let cell_text = parent_cell[0];
-        function get_text_size(spcell_cells){
-            let top = 1145141919810;
-            let left = 1145141919810;
-            let bottom = 0;
-            let right = 0;
-            for(let cell_key of spcell_cells){
-                let cell_index = {x:parseInt(cell_key.split('-')[1], 10), y:parseInt(cell_key.split('-')[0], 10)};
-                if(cell_index.y < top){
-                    top = cell_index.y;
-                };
-                if(cell_index.x < left){
-                    left = cell_index.x;
-                };
-                if(cell_index.y > bottom){
-                    bottom = cell_index.y;
-                };
-                if(cell_index.x > right){
-                    right = cell_index.x;
+function handle_spcell_list(ctx, table_obj, x, y, is_divider, spcell_list){
+    for (let spcell_obj of spcell_list){
+        let spcell_text = table_obj.cells[spcell_obj[0]][0];
+        let top = Infinity, left = Infinity, bottom = -Infinity, right = -Infinity;
+        for (let cell_key of spcell_obj[1]) {
+            let [row, col] = cell_key.split('-').map(Number);
+            top = Math.min(top, row);
+            left = Math.min(left, col);
+            bottom = Math.max(bottom, row);
+            right = Math.max(right, col);
+        };
+        let center_x = Math.round((left + right) / 2);
+        let center_y = Math.round((top + bottom) / 2);
+        let closest = $`${center_y}-${center_x}`;
+        if(!spcell_obj[1].includes(closest)){
+            let min_dist = Infinity;
+            for(let cell_key of spcell_obj[1]){
+                let [row, col] = cell_key.split('-').map(Number);
+                let dist = Math.sqrt((row - center_y) ** 2 + (col - center_x) ** 2);
+                if(dist < min_dist){
+                    closest = cell_key;
+                    min_dist = dist;
                 };
             };
-            let center_x = Math.round((left + right) / 2);
-            let center_y = Math.round((top + bottom) / 2);
-            let closest_cell_key = null;
-            if(`${center_y}-${center_x}` in spcell_obj[1]){
-                closest_cell_key = `${center_y}-${center_x}`;
+        };
+        let [row, col] = closest.split('-').map(Number);
+        let allincluded_cells = [];
+        let hor_cells = [];
+        allincluded_cells.push(closest);
+        while(spcell_obj[1].includes(`${row}-${col-1}`)){
+            col--;
+            allincluded_cells.push(`${row}-${col}`);
+        };
+        while(spcell_obj[1].includes(`${row}-${col+1}`)){
+            col++;
+            allincluded_cells.push(`${row}-${col}`);
+        };
+        hor_cells = [...allincluded_cells];
+        while (true) {
+            let canExpandUp = true;
+            for (let hor_cell of hor_cells) {
+                let [hor_row, hor_col] = hor_cell.split('-').map(Number);
+                if (!spcell_obj[1].includes(`${hor_row - 1}-${hor_col}`)) {
+                    canExpandUp = false;
+                    break;
+                };
+            };
+            if (canExpandUp) {
+                for (let hor_cell of hor_cells) {
+                    let [hor_row, hor_col] = hor_cell.split('-').map(Number);
+                    allincluded_cells.push(`${hor_row - 1}-${hor_col}`);
+                };
+                hor_cells = hor_cells.map(cell => {
+                    let [hor_row, hor_col] = cell.split('-').map(Number);
+                    return `${hor_row - 1}-${hor_col}`;
+                });
             } else {
-                let min_distance = 1145141919810;
-                for(let cell_key of spcell_obj[1]){
-                    let cell_index = {x:parseInt(cell_key.split('-')[1], 10), y:parseInt(cell_key.split('-')[0], 10)};
-                    let distance = Math.pow(center_x - cell_index.x, 2) + Math.pow(center_y - cell_index.y, 2);
-                    if(distance < min_distance){
-                        min_distance = distance;
-                        closest_cell_key = cell_key;
+                break;
+            };
+        };
+        while (true) {
+            let canExpandDown = true;
+            for (let hor_cell of hor_cells) {
+                let [hor_row, hor_col] = hor_cell.split('-').map(Number);
+                if (!spcell_obj[1].includes(`${hor_row + 1}-${hor_col}`)) {
+                    canExpandDown = false;
+                    break;
+                };
+            };
+            if (canExpandDown) {
+                for (let hor_cell of hor_cells) {
+                    let [hor_row, hor_col] = hor_cell.split('-').map(Number);
+                    allincluded_cells.push(`${hor_row + 1}-${hor_col}`);
+                };
+                hor_cells = hor_cells.map(cell => {
+                    let [hor_row, hor_col] = cell.split('-').map(Number);
+                    return `${hor_row + 1}-${hor_col}`;
+                });
+            } else {
+                break;
+            };
+        };
+        top = Infinity, left = Infinity, bottom = -Infinity, right = -Infinity;
+        for(let cell_key of allincluded_cells){
+            let [row, col] = cell_key.split('-').map(Number);
+            top = Math.min(top, row);
+            left = Math.min(left, col);
+            bottom = Math.max(bottom, row);
+            right = Math.max(right, col);
+        };
+        left = x + table_obj.heads.rowh_height + get_cell_pos(left, table_obj.heads.col);
+        top = y + table_obj.heads.colh_height + get_cell_pos(top, table_obj.heads.row);
+        right = x + table_obj.heads.rowh_height + get_cell_pos(right, table_obj.heads.col) + table_obj.heads.col[right][1];
+        bottom = y + table_obj.heads.colh_height + get_cell_pos(bottom, table_obj.heads.row) + table_obj.heads.row[bottom][1];
+        draw_text(ctx, spcell_text, left, top, right - left, bottom - top);
+
+        if(is_divider){
+            for(let cell_key of spcell_obj[1]){
+                let vcursor = {x:x, y:y};
+                let cell_index = {x:parseInt(cell_key.split('-')[1], 10), y:parseInt(cell_key.split('-')[0], 10)};
+                let cell_width = table_obj.heads.col[cell_index.x][1];
+                let cell_height = table_obj.heads.row[cell_index.y][1];
+                vcursor.x = x + table_obj.heads.rowh_height;
+                vcursor.x = vcursor.x + get_cell_pos(cell_index.x, table_obj.heads.col);
+                vcursor.y = y + table_obj.heads.colh_height;
+                vcursor.y = vcursor.y + get_cell_pos(cell_index.y, table_obj.heads.row);
+                // 左上
+                if( !($`${cell_index.y}-${cell_index.x-1}` in spcell_obj[1]) && !($`${cell_index.y-1}-${cell_index.x}` in spcell_obj[1]) ){
+                    draw_line(ctx, vcursor.x, vcursor.y, vcursor.x, vcursor.y + 10, 4);
+                    draw_line(ctx, vcursor.x, vcursor.y, vcursor.x + 10, vcursor.y, 4);
+                    draw_point(ctx, vcursor.x, vcursor.y, 4);
+                };
+                // 右上
+                if( !($`${cell_index.y}-${cell_index.x+1}` in spcell_obj[1]) && !($`${cell_index.y-1}-${cell_index.x}` in spcell_obj[1]) ){
+                    if(cell_index.x < table_obj.heads.col.length - 1){
+                        draw_line(ctx, vcursor.x + cell_width, vcursor.y, vcursor.x + cell_width - 10, vcursor.y, 4);
+                        draw_line(ctx, vcursor.x + cell_width, vcursor.y, vcursor.x + cell_width, vcursor.y + 10, 4);
+                        draw_point(ctx, vcursor.x + cell_width, vcursor.y, 4);
+                    };
+                };
+                // 左下
+                if( !($`${cell_index.y+1}-${cell_index.x}` in spcell_obj[1]) && !($`${cell_index.y}-${cell_index.x-1}` in spcell_obj[1]) ){
+                    if(cell_index.y < table_obj.heads.row.length - 1){
+                        draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x, vcursor.y + cell_height - 10, 4);
+                        draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x + 10, vcursor.y + cell_height, 4);
+                        draw_point(ctx, vcursor.x, vcursor.y + cell_height, 4);
+                    };
+                };
+                // 右下
+                if( !($`${cell_index.y+1}-${cell_index.x}` in spcell_obj[1]) && !($`${cell_index.y}-${cell_index.x+1}` in spcell_obj[1]) ){
+                    if(cell_index.x < table_obj.heads.col.length - 1 && cell_index.y < table_obj.heads.row.length - 1){
+                        draw_line(ctx, vcursor.x + cell_width, vcursor.y + cell_height, vcursor.x + cell_width, vcursor.y + cell_height - 10, 4);
+                        draw_line(ctx, vcursor.x + cell_width, vcursor.y + cell_height, vcursor.x + cell_width - 10, vcursor.y + cell_height, 4);
+                        draw_point(ctx, vcursor.x + cell_width, vcursor.y + cell_height, 4);
                     };
                 };
             };
-            let closest_cell_index = {x:parseInt(closest_cell_key.split('-')[1], 10), y:parseInt(closest_cell_key.split('-')[0], 10)};
-            let text_cells = [];
-            let left_index = closest_cell_index.x - 1;
-            while(left_index >= 0 && `${closest_cell_index.y}-${left_index}` in spcell_obj[1]){
-                text_cells.push(`${closest_cell_index.y}-${left_index}`);
-                left_index--;
-            };
-            let right_index = closest_cell_index.x + 1;
-            while(right_index < table_obj.heads.col.length && `${closest_cell_index.y}-${right_index}` in spcell_obj[1]){
-                text_cells.push(`${closest_cell_index.y}-${right_index}`);
-                right_index++;
-            };
-            let horizontal_cells = text_cells;
-            let top_index = closest_cell_index.y - 1;
-            while(top_index >= 0){
-                let it_must_includes_when_these_cells_exist = [];
-                for(let cell_key of horizontal_cells){
-                    let cell_index = {x:parseInt(cell_key.split('-')[1], 10), y:parseInt(cell_key.split('-')[0], 10)};
-                    it_must_includes_when_these_cells_exist.push(`${top_index}-${cell_index.x}`);
-                };
-                if(it_must_includes_when_these_cells_exist.every(cell_key => cell_key in spcell_obj[1])){
-                    text_cells.push(...horizontal_cells);
-                    top_index--;
-                } else {
-                    break;
-                };
-            };
-            let bottom_index = closest_cell_index.y + 1;
-            while(bottom_index < table_obj.heads.row.length){
-                let it_must_includes_when_these_cells_exist = [];
-                for(let cell_key of horizontal_cells){
-                    let cell_index = {x:parseInt(cell_key.split('-')[1], 10), y:parseInt(cell_key.split('-')[0], 10)};
-                    it_must_includes_when_these_cells_exist.push(`${bottom_index}-${cell_index.x}`);
-                };
-                if(it_must_includes_when_these_cells_exist.every(cell_key => cell_key in spcell_obj[1])){
-                    text_cells.push(...horizontal_cells);
-                    bottom_index++;
-                } else {
-                    break;
-                };
-            };
-            return text_cells;
         };
-        let text_cells = get_text_size(spcell_obj[1]);
-        let min_x = 1145141919810;
-        let min_y = 1145141919810;
-        let max_x = 0;
-        let max_y = 0;
-        for(let cell_key of text_cells){
-            let cell_index = {x:parseInt(cell_key.split('-')[1], 10), y:parseInt(cell_key.split('-')[0], 10)};
-            let cell_x = cell_x + get_cell_pos(cell_index.x, table_obj.heads.col);
-            let cell_y = cell_y + get_cell_pos(cell_index.y, table_obj.heads.row);
-            if(cell_x < min_x){
-                min_x = cell_x;
-            };
-            if(cell_y < min_y){
-                min_y = cell_y;
-            };
-            cell_x = cell_x + get_cell_pos(cell_index.x + 1, table_obj.heads.col);
-            cell_y = cell_y + get_cell_pos(cell_index.y + 1, table_obj.heads.row);
-            if(cell_x > max_x){
-                max_x = cell_x;
-            };
-            if(cell_y > max_y){
-                max_y = cell_y;
-            };
-        };
-        let text_width = max_x - min_x;
-        let text_height = max_y - min_y;
-        draw_text(ctx, cell_text, min_x, min_y, text_width, text_height);
     };
 };
