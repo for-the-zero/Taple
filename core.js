@@ -315,34 +315,42 @@ function handle_spcell_list(ctx, table_obj, x, y, is_divider, spcell_list){
                 vcursor.y = y + table_obj.heads.colh_height;
                 vcursor.y = vcursor.y + get_cell_pos(cell_index.y, table_obj.heads.row);
                 // 左上
-                if( !($`${cell_index.y}-${cell_index.x-1}` in spcell_obj[1]) && !($`${cell_index.y-1}-${cell_index.x}` in spcell_obj[1]) ){
+                if (
+                    (cell_index.x > 0 && !spcell_obj[1].includes(`${cell_index.y}-${cell_index.x-1}`)) && // 左
+                    (cell_index.y > 0 && !spcell_obj[1].includes(`${cell_index.y-1}-${cell_index.x}`)) // 上
+                ) {
                     draw_line(ctx, vcursor.x, vcursor.y, vcursor.x, vcursor.y + 10, 4);
                     draw_line(ctx, vcursor.x, vcursor.y, vcursor.x + 10, vcursor.y, 4);
                     draw_point(ctx, vcursor.x, vcursor.y, 4);
                 };
                 // 右上
-                if( !($`${cell_index.y}-${cell_index.x+1}` in spcell_obj[1]) && !($`${cell_index.y-1}-${cell_index.x}` in spcell_obj[1]) ){
-                    if(cell_index.x < table_obj.heads.col.length - 1){
-                        draw_line(ctx, vcursor.x + cell_width, vcursor.y, vcursor.x + cell_width - 10, vcursor.y, 4);
-                        draw_line(ctx, vcursor.x + cell_width, vcursor.y, vcursor.x + cell_width, vcursor.y + 10, 4);
-                        draw_point(ctx, vcursor.x + cell_width, vcursor.y, 4);
-                    };
+                if (
+                    cell_index.x < table_obj.heads.col.length - 1 && // 右不越界
+                    (cell_index.y > 0 && !spcell_obj[1].includes(`${cell_index.y-1}-${cell_index.x}`)) && // 上
+                    (cell_index.y > 0 && !spcell_obj[1].includes(`${cell_index.y}-${cell_index.x+1}`)) // 右
+                ) {
+                    draw_line(ctx, vcursor.x + cell_width, vcursor.y, vcursor.x + cell_width - 10, vcursor.y, 4);
+                    draw_line(ctx, vcursor.x + cell_width, vcursor.y, vcursor.x + cell_width, vcursor.y + 10, 4);
+                    draw_point(ctx, vcursor.x + cell_width, vcursor.y, 4);
                 };
                 // 左下
-                if( !($`${cell_index.y+1}-${cell_index.x}` in spcell_obj[1]) && !($`${cell_index.y}-${cell_index.x-1}` in spcell_obj[1]) ){
-                    if(cell_index.y < table_obj.heads.row.length - 1){
-                        draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x, vcursor.y + cell_height - 10, 4);
-                        draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x + 10, vcursor.y + cell_height, 4);
-                        draw_point(ctx, vcursor.x, vcursor.y + cell_height, 4);
-                    };
+                if (
+                    (cell_index.x > 0 && !spcell_obj[1].includes(`${cell_index.y+1}-${cell_index.x-1}`)) && // 下左
+                    (cell_index.y < table_obj.heads.row.length - 1 && !spcell_obj[1].includes(`${cell_index.y}-${cell_index.x}`)) && // 中
+                    (cell_index.y < table_obj.heads.row.length - 1 && !spcell_obj[1].includes(`${cell_index.y+1}-${cell_index.x}`)) // 下
+                ) {
+                    draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x, vcursor.y + cell_height - 10, 4);
+                    draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x + 10, vcursor.y + cell_height, 4);
+                    draw_point(ctx, vcursor.x, vcursor.y + cell_height, 4);
                 };
                 // 右下
-                if( !($`${cell_index.y+1}-${cell_index.x}` in spcell_obj[1]) && !($`${cell_index.y}-${cell_index.x+1}` in spcell_obj[1]) ){
-                    if(cell_index.x < table_obj.heads.col.length - 1 && cell_index.y < table_obj.heads.row.length - 1){
-                        draw_line(ctx, vcursor.x + cell_width, vcursor.y + cell_height, vcursor.x + cell_width, vcursor.y + cell_height - 10, 4);
-                        draw_line(ctx, vcursor.x + cell_width, vcursor.y + cell_height, vcursor.x + cell_width - 10, vcursor.y + cell_height, 4);
-                        draw_point(ctx, vcursor.x + cell_width, vcursor.y + cell_height, 4);
-                    };
+                if (
+                    cell_index.x < table_obj.heads.col.length - 1 && // 右不越界
+                    (cell_index.y < table_obj.heads.row.length - 1 && !spcell_obj[1].includes(`${cell_index.y+1}-${cell_index.x}`)) // 下
+                ) {
+                    draw_line(ctx, vcursor.x + cell_width, vcursor.y + cell_height, vcursor.x + cell_width - 10, vcursor.y + cell_height, 4);
+                    draw_line(ctx, vcursor.x + cell_width, vcursor.y + cell_height, vcursor.x + cell_width, vcursor.y + cell_height - 10, 4);
+                    draw_point(ctx, vcursor.x + cell_width, vcursor.y + cell_height, 4);
                 };
             };
         };
