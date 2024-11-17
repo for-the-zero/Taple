@@ -42,6 +42,23 @@
             <li id="cell-divider" style="user-select: none;"><span class="material-icons-outlined" style="margin-right: 5px;">shape_line</span><span id="scd_text">Cell Divider : ON</span></li>
         </ul>
     </div>
+    <div class="editpanel show"> <!--TODO:-->
+        <h1>Edit</h1>
+        <div class="celledit-ctrlcont">
+            <p>Text of cell:</p>
+            <textarea class="celledit-text-input" width="70%" rows="1"></textarea>
+        </div>
+        <div class="celledit-ctrlcont">
+            <p>Width of cell:</p>
+            <input type="range" class="celledit-size-input-x" min="10" max="50" value="20"> <!--TODO:-->
+        </div class="celledit-ctrlcont">
+        <div class="celledit-ctrlcont">
+            <p>Height of cell:</p>
+            <input type="range" class="celledit-size-input-y" min="10" max="50" value="20"> <!--TODO:-->
+        </div>
+        
+        <button id="celledit-btn" class="celledit-btn">Submit</button>
+    </div>
     <canvas id="canvas"></canvas>
 
 

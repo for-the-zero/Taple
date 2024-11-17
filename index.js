@@ -79,7 +79,7 @@ ele_divider_switch.on('click',function(){
 const cvs_ctx = natele_canvas.getContext('2d');
 var now_table = {};
 // Example table start
-// TODO: del this
+// T0D0: del this
 now_table = {
     heads: {
         col: [
@@ -92,7 +92,7 @@ now_table = {
             ['r2',100],
             ['r3',100],
         ],
-        colh_height: 70,
+        colh_height: 80,
         rowh_height: 70
     },
     cells: {
@@ -118,9 +118,56 @@ function draw(){
     cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
     cvs_ctx.stokeStyle = 'black';
     taple(cvs_ctx,now_table,0,90,cell_divider);
-    let testing = true; //TODO: false
+    let testing = false;
     if(!testing){
         requestAnimationFrame(draw);
     };
 };
 draw();
+
+var merge_select = null
+natele_canvas.addEventListener('click',function(e){
+    let x = e.offsetX * 1.5;
+    let y = e.offsetY * 1.5 - 90;
+    let clicked_cell = { x: -1, y: -1 };
+    let col_head_height = now_table.heads.colh_height;
+    let row_head_width = now_table.heads.rowh_height;
+    let vcursor_x = row_head_width;
+    let vcursor_y = col_head_height;
+    for (let i = 0; i < now_table.heads.col.length; i++) {
+        if (x >= vcursor_x && x < vcursor_x + now_table.heads.col[i][1]) {
+            clicked_cell.x = i;
+            break;
+        };
+        vcursor_x += now_table.heads.col[i][1];
+    };
+    for (let j = 0; j < now_table.heads.row.length; j++) {
+        if (y >= vcursor_y && y < vcursor_y + now_table.heads.row[j][1]) {
+            clicked_cell.y = j;
+            break;
+        };
+        vcursor_y += now_table.heads.row[j][1];
+    };
+
+    if(tool == 'merge'){
+        if(merge_select){
+            //TODO:
+        } else {
+            merge_select = clicked_cell;
+            //TODO:
+        };
+        //TODO:
+    } else {
+        merge_select = null;
+        if(tool == 'text'){
+            //TODO:
+        } else if(tool == 'split'){
+            //TODO:
+        } else if(tool == 'add'){
+            //TODO:
+        } else if(tool == 'del'){
+            //TODO:
+        };
+    };
+    // ...
+});

@@ -47,7 +47,7 @@ body{
 .add-bar{
     transform: translateX(-50%) translateY(calc(100% + 10px));
 }
-.menu{
+.menu, .editpanel{
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
     background-color: white;
     border-top-left-radius: 20px;
@@ -60,12 +60,12 @@ body{
     padding: 20px;
     width: 65vw;
     max-height: 80vw;
-    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.11);
+    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.00);
     overflow-y: auto;
 }
-.menu.show{
+.menu.show, .editpanel.show{
     transform: translateX(-50%) translateY(0);
-    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.11);
+    transition: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.00);
     /* transition: all 0.3s cubic-bezier(0.38, 0, 0.19, 1.03); */
 }
 .as-list{
@@ -90,3 +90,33 @@ body{
     height: 100%;
     position: fixed;
 }
+
+.celledit-ctrlcont{
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    box-sizing: border-box;
+}
+.celledit-ctrlcont p{margin: 0;}
+.celledit-ctrlcont input, .celledit-ctrlcont textarea{width: 70%;}
+.celledit-ctrlcont textarea{
+    border-radius: 18px;
+    padding: 5px;
+    border: 2px solid #ccc;
+    resize: none;
+    transition: all 0.1s cubic-bezier(0.76, 0.08, 0.71, 0.91);
+    box-sizing: border-box;
+}
+.celledit-ctrlcont textarea:focus{
+    outline: none;
+    border-radius: 7px;
+    border: 3px solid lightseagreen;
+    transition: all 0.1s cubic-bezier(0.76, 0.08, 0.71, 0.91);
+    box-sizing: border-box;
+}
+/* TODO: .celledit-ctrlcont input和.celledit button */
