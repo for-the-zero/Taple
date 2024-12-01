@@ -1,4 +1,4 @@
-const ele_text_btn = $('.controls-bar button#text-btn');
+const ele_edit_btn = $('.controls-bar button#edit-btn');
 const ele_merge_btn = $('.controls-bar button#merge-btn');
 const ele_split_btn = $('.controls-bar button#split-btn');
 const ele_add_btn = $('.controls-bar button#add-btn');
@@ -15,29 +15,35 @@ const ele_savejson = $('.as-list #save-json');
 const ele_loadjson= $('.as-list #load-json');
 const ele_divider_switch = $('.as-list #cell-divider');
 
+const ele_ce_text = $('.celledit-text-input');
+const ele_ce_width = $('.celledit-size-input-x');
+const ele_ce_height = $('.celledit-size-input-y');
+const ele_ce_btn = $('.celledit-btn');
+const ele_ce_panel = $('.editpanel');
+
 const natele_canvas = document.getElementById('canvas');
 
 // tool selection
-var tool = 'text';
-ele_text_btn.addClass('selected-controls');
+var tool = 'edit';
+ele_edit_btn.addClass('selected-controls');
 ele_add_bar.hide();
-ele_text_btn.on('click',function(){
-    tool = 'text';
-    ele_text_btn.addClass('selected-controls');
+ele_edit_btn.on('click',function(){
+    tool = 'edit';
+    ele_edit_btn.addClass('selected-controls');
     ele_merge_btn.removeClass('selected-controls');
     ele_split_btn.removeClass('selected-controls');
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
     ele_add_bar.hide();
 });
-ele_merge_btn.on('click',function(){tool ='merge';ele_text_btn.removeClass('selected-controls');ele_merge_btn.addClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.removeClass('selected-controls');ele_add_bar.hide();});
-ele_split_btn.on('click',function(){tool ='split';ele_text_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.addClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.removeClass('selected-controls');ele_add_bar.hide();});
+ele_merge_btn.on('click',function(){tool ='merge';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.addClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.removeClass('selected-controls');ele_add_bar.hide();});
+ele_split_btn.on('click',function(){tool ='split';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.addClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.removeClass('selected-controls');ele_add_bar.hide();});
 ele_add_btn.on('click',function(){
-    tool = 'add';ele_text_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.addClass('selected-controls');ele_del_btn.removeClass('selected-controls');
+    tool = 'add';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.addClass('selected-controls');ele_del_btn.removeClass('selected-controls');
     ele_add_bar.show();
 });
 ele_del_btn.on('click',function(){
-    tool = 'del';ele_text_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.addClass('selected-controls');
+    tool = 'del';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.addClass('selected-controls');
     ele_add_bar.show();
 });
 
@@ -59,7 +65,7 @@ ele_saveimg.on('click',function(){
 });
 ele_savejson.on('click',function(){
     //TODO:
-});
+}); 
 ele_loadjson.on('click',function(){
     //TODO:
 });
@@ -79,7 +85,7 @@ ele_divider_switch.on('click',function(){
 const cvs_ctx = natele_canvas.getContext('2d');
 var now_table = {};
 // Example table start
-// T0D0: del this
+// TODO: del this
 now_table = {
     heads: {
         col: [
@@ -125,7 +131,17 @@ function draw(){
 };
 draw();
 
-var merge_select = null
+ele_ce_width.on('input',function(){
+    let val = $(this).val();
+    $(this).parent().find('p span').text(val);
+});
+ele_ce_height.on('input',function(){
+    let val = $(this).val();
+    $(this).parent().find('p span').text(val);
+});
+
+var merge_select = null;
+var editing_cell = '';
 natele_canvas.addEventListener('click',function(e){
     let x = e.offsetX * 1.5;
     let y = e.offsetY * 1.5 - 90;
@@ -159,8 +175,38 @@ natele_canvas.addEventListener('click',function(e){
         //TODO:
     } else {
         merge_select = null;
-        if(tool == 'text'){
-            //TODO:
+        if(tool == 'edit'){
+            editing_cell = clicked_cell;
+            if(editing_cell.x == -1){
+                ele_ce_text.val(now_table.heads.row[editing_cell.y][0]);
+                ele_ce_width.val(now_table.heads.rowh_height);
+                ele_ce_height.val(now_table.heads.row[editing_cell.y][1]);
+                ele_ce_panel.addClass('show');
+            } else if (editing_cell.y == -1){
+                ele_ce_text.val(now_table.heads.col[editing_cell.x][0]);
+                ele_ce_width.val(now_table.heads.col[editing_cell.x][1]);
+                ele_ce_height.val(now_table.heads.colh_height);
+                ele_ce_panel.addClass('show');
+            } else {
+                let cellKey = editing_cell.y + '-' + editing_cell.x;
+                if (now_table.cells[cellKey][1] === true && now_table.cells[cellKey][2] !== 'parent') {
+                    let parentCellKey = now_table.cells[cellKey][2];
+                    ele_ce_text.val(now_table.cells[parentCellKey][0]);
+                } else {
+                    ele_ce_text.val(now_table.cells[cellKey][0]);
+                };
+                if(editing_cell.x == -1){
+                    ele_ce_width.val(now_table.heads.rowh_height);
+                    ele_ce_height.val(now_table.heads.row[editing_cell.y][1]);
+                } else if (editing_cell.y == -1){
+                    ele_ce_width.val(now_table.heads.col[editing_cell.x][1]);
+                    ele_ce_height.val(now_table.heads.colh_height);
+                } else {
+                    ele_ce_width.val(now_table.heads.col[editing_cell.x][1]);
+                    ele_ce_height.val(now_table.heads.row[editing_cell.y][1]);
+                };
+                ele_ce_panel.addClass('show');
+            };
         } else if(tool == 'split'){
             //TODO:
         } else if(tool == 'add'){
@@ -170,4 +216,32 @@ natele_canvas.addEventListener('click',function(e){
         };
     };
     // ...
+});
+
+// edit
+ele_ce_btn.on('click',function(){
+    ele_ce_panel.removeClass('show');
+    let cell_index = editing_cell.y + '-' + editing_cell.x;
+    let cell_text = ele_ce_text.val();
+    let cell_width = parseInt(ele_ce_width.val());
+    let cell_height = parseInt(ele_ce_height.val());
+
+    if(editing_cell.x == -1){
+        now_table.heads.row[editing_cell.y][0] = cell_text;
+        now_table.heads.row[editing_cell.y][1] = cell_height;
+        now_table.heads.rowh_height = cell_width;
+    } else if (editing_cell.y == -1){
+        now_table.heads.col[editing_cell.x][0] = cell_text;
+        now_table.heads.col[editing_cell.x][1] = cell_width;
+        now_table.heads.colh_height = cell_height;
+    } else {
+        if(now_table.cells[cell_index][1] === true && now_table.cells[cell_index][2] !== 'parent'){
+            let parentCellKey = now_table.cells[cell_index][2];
+            now_table.cells[parentCellKey][0] = cell_text;
+        } else {
+            now_table.cells[cell_index][0] = cell_text;
+        };
+        now_table.heads.col[editing_cell.x][1] = cell_width;
+        now_table.heads.row[editing_cell.y][1] = cell_height;
+    };
 });

@@ -104,6 +104,7 @@ body{
 }
 .celledit-ctrlcont p{margin: 0;}
 .celledit-ctrlcont input, .celledit-ctrlcont textarea{width: 70%;}
+.celledit-ctrlcont input[type="range"]{cursor: pointer;}
 .celledit-ctrlcont textarea{
     border-radius: 18px;
     padding: 5px;
@@ -119,4 +120,24 @@ body{
     transition: all 0.1s cubic-bezier(0.76, 0.08, 0.71, 0.91);
     box-sizing: border-box;
 }
-/* TODO: .celledit-ctrlcont input和.celledit button */
+.celledit-btn{
+    left: 50%;
+    transform: translateX(-50%);
+    position: relative;
+    width: 150px;
+    height: 30px;
+    border-radius: 114514px;
+    border: none;
+    background-color: lightseagreen;
+    color: whitesmoke;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    animation: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.00);
+}
+.celledit-btn:hover{
+    box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.5);
+    animation: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.00);
+}
+.celledit-btn:active{
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+    animation: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.00);
+}

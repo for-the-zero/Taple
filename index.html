@@ -14,7 +14,7 @@
     <div class="controls-bar">
         <button id="menu-btn" class="material-icons-outlined">menu</button>
         <!--tools-->
-        <button id="text-btn" class="material-icons-outlined">edit_note</button>
+        <button id="edit-btn" class="material-icons-outlined">edit_note</button>
         <button id="merge-btn" class="material-icons-outlined">merge</button>
         <button id="split-btn" class="material-icons-outlined">call_split</button>
         <button id="add-btn" class="material-icons-outlined">add</button>
@@ -42,22 +42,22 @@
             <li id="cell-divider" style="user-select: none;"><span class="material-icons-outlined" style="margin-right: 5px;">shape_line</span><span id="scd_text">Cell Divider : ON</span></li>
         </ul>
     </div>
-    <div class="editpanel show"> <!--TODO:-->
+    <div class="editpanel"> <!--TODO:-->
         <h1>Edit</h1>
         <div class="celledit-ctrlcont">
             <p>Text of cell:</p>
             <textarea class="celledit-text-input" width="70%" rows="1"></textarea>
         </div>
         <div class="celledit-ctrlcont">
-            <p>Width of cell:</p>
-            <input type="range" class="celledit-size-input-x" min="10" max="50" value="20"> <!--TODO:-->
+            <p>Width of cell: <span>100</span></p>
+            <input type="range" class="celledit-size-input-x" min="40" max="800" value="100">
         </div class="celledit-ctrlcont">
         <div class="celledit-ctrlcont">
-            <p>Height of cell:</p>
-            <input type="range" class="celledit-size-input-y" min="10" max="50" value="20"> <!--TODO:-->
+            <p>Height of cell: <span>100</span></p>
+            <input type="range" class="celledit-size-input-y" min="40" max="800" value="100">
         </div>
         
-        <button id="celledit-btn" class="celledit-btn">Submit</button>
+        <button class="celledit-btn">Submit</button>
     </div>
     <canvas id="canvas"></canvas>
 

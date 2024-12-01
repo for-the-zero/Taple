@@ -102,7 +102,7 @@ function draw_point(ctx, x, y, size){
 
 function get_cell_pos(cell_index, head_obj){
     let pos = 0;
-    for(let i = 0; i < cell_index; i++){
+    for(let i = 0; i < cell_index; i++) {
         pos += head_obj[i][1];
     };
     return pos;
@@ -130,7 +130,7 @@ function taple(ctx, table_obj, x, y, is_divider){
     
     // 画行头
     vcursor = {x:x, y:y};
-    vcursor.y += table_obj.heads.rowh_height;
+    vcursor.y += table_obj.heads.colh_height;
     for(let row of table_obj.heads.row){
         draw_text(ctx, row[0], vcursor.x, vcursor.y, table_obj.heads.rowh_height, row[1]);
         if(table_obj.heads.row.indexOf(row) !== 0 && is_divider){
@@ -221,7 +221,7 @@ function handle_spcell_list(ctx, table_obj, x, y, is_divider, spcell_list){
         };
         let center_x = Math.round((left + right) / 2);
         let center_y = Math.round((top + bottom) / 2);
-        let closest = $`${center_y}-${center_x}`;
+        let closest = `${center_y}-${center_x}`;
         if(!spcell_obj[1].includes(closest)){
             let min_dist = Infinity;
             for(let cell_key of spcell_obj[1]){
@@ -312,8 +312,7 @@ function handle_spcell_list(ctx, table_obj, x, y, is_divider, spcell_list){
                 let cell_height = table_obj.heads.row[cell_index.y][1];
                 vcursor.x = x + table_obj.heads.rowh_height;
                 vcursor.x = vcursor.x + get_cell_pos(cell_index.x, table_obj.heads.col);
-                vcursor.y = y + table_obj.heads.colh_height;
-                vcursor.y = vcursor.y + get_cell_pos(cell_index.y, table_obj.heads.row);
+                vcursor.y = y + table_obj.heads.colh_height + get_cell_pos(cell_index.y, table_obj.heads.row);
                 // 左上
                 if (
                     (cell_index.x > 0 && !spcell_obj[1].includes(`${cell_index.y}-${cell_index.x-1}`)) && // 左
