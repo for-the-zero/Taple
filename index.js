@@ -15,6 +15,8 @@ const ele_savejson = $('.as-list #save-json');
 const ele_loadjson= $('.as-list #load-json');
 const ele_divider_switch = $('.as-list #cell-divider');
 
+const ele_fmt = $('.floating-merge-tip');
+
 const ele_ce_text = $('.celledit-text-input');
 const ele_ce_width = $('.celledit-size-input-x');
 const ele_ce_height = $('.celledit-size-input-y');
@@ -105,12 +107,12 @@ now_table = {
         '0-0': ['cell1',true,'parent'],
         '0-1': ['cell2',false,null],
         '0-2': ['cell3',false,null],
-        '1-0': ['',true,'0-0'],
-        '1-1': ['cell4',true,'parent'],
-        '1-2': ['cell5',true,'1-1'],
+        '1-0': ['cell7',true,'0-0'],
+        '1-1': ['cell4',false,null],
+        '1-2': ['cell5',false,null],
         '2-0': ['cell6',false,null],
-        '2-1': ['',true,'1-1'],
-        '2-2': ['cell5',false,null],
+        '2-1': ['cell8',false,null],
+        '2-2': ['cell7',false,null],
     }
 };
 // Example table end
@@ -158,14 +160,36 @@ natele_canvas.addEventListener('click',function(e){
 
     if(tool == 'merge'){
         if(merge_select){
-            //TODO:
+            ele_fmt.removeClass('show');
+            if(clicked_cell.x !== -1 && clicked_cell.y !== -1 && merge_select.x !== -1 && merge_select.y !== -1 && merge_select !== clicked_cell){
+                let x_diff = Math.abs(merge_select.x - clicked_cell.x);
+                let y_diff = Math.abs(merge_select.y - clicked_cell.y);
+                if((x_diff === 1 && y_diff === 0) || (x_diff === 0 && y_diff === 1)){
+                    let clicked_cell_key = clicked_cell.y + '-' + clicked_cell.x;
+                    let merge_select_key = merge_select.y + '-' + merge_select.x;
+                    if(now_table.cells[clicked_cell_key][1] === false && now_table.cells[merge_select_key][1] === false){ //两者都为false
+                        now_table.cells[clicked_cell_key][1] = true;
+                        now_table.cells[clicked_cell_key][2] = merge_select_key;
+                        now_table.cells[merge_select_key][1] = true;
+                        now_table.cells[merge_select_key][2] = 'parent';
+                    } else if(now_table.cells[clicked_cell_key][1] === true && now_table.cells[merge_select_key][1] === false){ //clicked_cell为true，merge_select为false
+                        //TODO:
+                    } else if(now_table.cells[clicked_cell_key][1] === false && now_table.cells[merge_select_key][1] === true){ //clicked_cell为false，merge_select为true
+                        //TODO:
+                    } else if(now_table.cells[clicked_cell_key][1] === true && now_table.cells[merge_select_key][1] === true){ //两者都为true
+                        //TODO:
+                    };
+                };
+            };
+            merge_select = null;
         } else {
             merge_select = clicked_cell;
-            //TODO:
+            ele_fmt.find('span').text(merge_select.x + ',' + merge_select.y);
+            ele_fmt.addClass('show');
         };
-        //TODO:
     } else {
         merge_select = null;
+        ele_fmt.removeClass('show');
         if(tool == 'edit'){
             editing_cell = clicked_cell;
             if(editing_cell.x == -1){
@@ -220,32 +244,7 @@ natele_canvas.addEventListener('click',function(e){
 });
 
 // edit
-// ele_ce_btn.on('click',function(){
-//     ele_ce_panel.removeClass('show');
-//     let cell_index = editing_cell.y + '-' + editing_cell.x;
-//     let cell_text = ele_ce_text.val();
-//     let cell_width = parseInt(ele_ce_width.val());
-//     let cell_height = parseInt(ele_ce_height.val());
-
-//     if(editing_cell.x == -1){
-//         now_table.heads.row[editing_cell.y][0] = cell_text;
-//         now_table.heads.row[editing_cell.y][1] = cell_height;
-//         now_table.heads.rowh_height = cell_width;
-//     } else if (editing_cell.y == -1){
-//         now_table.heads.col[editing_cell.x][0] = cell_text;
-//         now_table.heads.col[editing_cell.x][1] = cell_width;
-//         now_table.heads.colh_height = cell_height;
-//     } else {
-//         if(now_table.cells[cell_index][1] === true && now_table.cells[cell_index][2] !== 'parent'){
-//             let parentCellKey = now_table.cells[cell_index][2];
-//             now_table.cells[parentCellKey][0] = cell_text;
-//         } else {
-//             now_table.cells[cell_index][0] = cell_text;
-//         };
-//         now_table.heads.col[editing_cell.x][1] = cell_width;
-//         now_table.heads.row[editing_cell.y][1] = cell_height;
-//     };
-// });
+/* ele_ce_btn.on('click',function(){ele_ce_panel.removeClass('show');let cell_index=editing_cell.y+'-'+editing_cell.x;let cell_text=ele_ce_text.val();let cell_width=parseInt(ele_ce_width.val());let cell_height=parseInt(ele_ce_height.val());if(editing_cell.x==-1){now_table.heads.row[editing_cell.y][0]=cell_text;now_table.heads.row[editing_cell.y][1]=cell_height;now_table.heads.rowh_height=cell_width}else if(editing_cell.y==-1){now_table.heads.col[editing_cell.x][0]=cell_text;now_table.heads.col[editing_cell.x][1]=cell_width;now_table.heads.colh_height=cell_height}else{if(now_table.cells[cell_index][1]===true&&now_table.cells[cell_index][2]!=='parent'){let parentCellKey=now_table.cells[cell_index][2];now_table.cells[parentCellKey][0]=cell_text}else{now_table.cells[cell_index][0]=cell_text};now_table.heads.col[editing_cell.x][1]=cell_width;now_table.heads.row[editing_cell.y][1]=cell_height}}); */
 ele_ce_width.on('input',function(){
     let val = parseInt($(this).val());
     $(this).parent().find('p span').text(val);
