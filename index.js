@@ -173,11 +173,38 @@ natele_canvas.addEventListener('click',function(e){
                         now_table.cells[merge_select_key][1] = true;
                         now_table.cells[merge_select_key][2] = 'parent';
                     } else if(now_table.cells[clicked_cell_key][1] === true && now_table.cells[merge_select_key][1] === false){ //clicked_cell为true，merge_select为false
-                        //TODO:
+                        now_table.cells[merge_select_key][1] = true;
+                        if(now_table.cells[clicked_cell_key][2] === 'parent'){
+                            now_table.cells[merge_select_key][2] = clicked_cell_key;
+                        } else {
+                            now_table.cells[merge_select_key][2] = now_table.cells[clicked_cell_key][2];
+                        };
                     } else if(now_table.cells[clicked_cell_key][1] === false && now_table.cells[merge_select_key][1] === true){ //clicked_cell为false，merge_select为true
-                        //TODO:
-                    } else if(now_table.cells[clicked_cell_key][1] === true && now_table.cells[merge_select_key][1] === true){ //两者都为true
-                        //TODO:
+                        now_table.cells[clicked_cell_key][1] = true;
+                        if(now_table.cells[merge_select_key][2] === 'parent'){
+                            now_table.cells[clicked_cell_key][2] = merge_select_key;
+                        } else {
+                            now_table.cells[clicked_cell_key][2] = now_table.cells[merge_select_key][2];
+                        };
+                    } else if(now_table.cells[clicked_cell_key][1] === true && now_table.cells[merge_select_key][1] === true && now_table.cells[clicked_cell_key][1] !== now_table.cells[merge_select_key][1] && !(now_table.cells[clicked_cell_key][2] === 'parent' && now_table.cells[merge_select_key][2] === 'parent')){ //两者都为true
+                        //TODO: bug:无法合并 ↑
+                        let goal_parent = null;
+                        let died_parent = null;
+                        if(now_table.cells[merge_select_key][2] === 'parent'){
+                            goal_parent = clicked_cell_key;
+                        }else{
+                            goal_parent = now_table.cells[merge_select_key][2];
+                        };
+                        if(now_table.cells[clicked_cell_key][2] === 'parent'){
+                            died_parent = merge_select_key;
+                        }else{
+                            died_parent = now_table.cells[clicked_cell_key][2];
+                        };
+                        for(let k in now_table.cells){
+                            if(now_table.cells[k][2] === died_parent){
+                                now_table.cells[k][2] = goal_parent;
+                            };
+                        };
                     };
                 };
             };

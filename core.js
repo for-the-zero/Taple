@@ -344,7 +344,7 @@ function handle_spcell_list(ctx, table_obj, x, y, is_divider, spcell_list) {
 
                 // 左下
                 if (
-                    (cell_index.x > 0 && !spcell_obj[1].includes(`${cell_index.y + 1}-${cell_index.x - 1}`)) &&
+                    (cell_index.x > 0 && !spcell_obj[1].includes(`${cell_index.y}-${cell_index.x - 1}`)) &&
                     (cell_index.y < table_obj.heads.row.length - 1 && !spcell_obj[1].includes(`${cell_index.y + 1}-${cell_index.x}`))
                 ) {
                     draw_line(ctx, vcursor.x, vcursor.y + cell_height, vcursor.x, vcursor.y + cell_height - 10, 4);
