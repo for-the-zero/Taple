@@ -131,15 +131,6 @@ function draw(){
 };
 draw();
 
-ele_ce_width.on('input',function(){
-    let val = $(this).val();
-    $(this).parent().find('p span').text(val);
-});
-ele_ce_height.on('input',function(){
-    let val = $(this).val();
-    $(this).parent().find('p span').text(val);
-});
-
 var merge_select = null;
 var editing_cell = '';
 natele_canvas.addEventListener('click',function(e){
@@ -180,12 +171,16 @@ natele_canvas.addEventListener('click',function(e){
             if(editing_cell.x == -1){
                 ele_ce_text.val(now_table.heads.row[editing_cell.y][0]);
                 ele_ce_width.val(now_table.heads.rowh_height);
+                ele_ce_width.parent().find('p span').text(now_table.heads.rowh_height);
                 ele_ce_height.val(now_table.heads.row[editing_cell.y][1]);
+                ele_ce_height.parent().find('p span').text(now_table.heads.row[editing_cell.y][1]);
                 ele_ce_panel.addClass('show');
             } else if (editing_cell.y == -1){
                 ele_ce_text.val(now_table.heads.col[editing_cell.x][0]);
                 ele_ce_width.val(now_table.heads.col[editing_cell.x][1]);
+                ele_ce_width.parent().find('p span').text(now_table.heads.col[editing_cell.x][1]);
                 ele_ce_height.val(now_table.heads.colh_height);
+                ele_ce_height.parent().find('p span').text(now_table.heads.colh_height);
                 ele_ce_panel.addClass('show');
             } else {
                 let cellKey = editing_cell.y + '-' + editing_cell.x;
@@ -197,13 +192,19 @@ natele_canvas.addEventListener('click',function(e){
                 };
                 if(editing_cell.x == -1){
                     ele_ce_width.val(now_table.heads.rowh_height);
+                    ele_ce_width.parent().find('p span').text(now_table.heads.rowh_height);
                     ele_ce_height.val(now_table.heads.row[editing_cell.y][1]);
+                    ele_ce_height.parent().find('p span').text(now_table.heads.row[editing_cell.y][1]);
                 } else if (editing_cell.y == -1){
                     ele_ce_width.val(now_table.heads.col[editing_cell.x][1]);
+                    ele_ce_width.parent().find('p span').text(now_table.heads.col[editing_cell.x][1]);
                     ele_ce_height.val(now_table.heads.colh_height);
+                    ele_ce_height.parent().find('p span').text(now_table.heads.colh_height);
                 } else {
                     ele_ce_width.val(now_table.heads.col[editing_cell.x][1]);
+                    ele_ce_width.parent().find('p span').text(now_table.heads.col[editing_cell.x][1]);
                     ele_ce_height.val(now_table.heads.row[editing_cell.y][1]);
+                    ele_ce_height.parent().find('p span').text(now_table.heads.row[editing_cell.y][1]);
                 };
                 ele_ce_panel.addClass('show');
             };
@@ -219,29 +220,70 @@ natele_canvas.addEventListener('click',function(e){
 });
 
 // edit
-ele_ce_btn.on('click',function(){
-    ele_ce_panel.removeClass('show');
-    let cell_index = editing_cell.y + '-' + editing_cell.x;
-    let cell_text = ele_ce_text.val();
-    let cell_width = parseInt(ele_ce_width.val());
-    let cell_height = parseInt(ele_ce_height.val());
+// ele_ce_btn.on('click',function(){
+//     ele_ce_panel.removeClass('show');
+//     let cell_index = editing_cell.y + '-' + editing_cell.x;
+//     let cell_text = ele_ce_text.val();
+//     let cell_width = parseInt(ele_ce_width.val());
+//     let cell_height = parseInt(ele_ce_height.val());
 
+//     if(editing_cell.x == -1){
+//         now_table.heads.row[editing_cell.y][0] = cell_text;
+//         now_table.heads.row[editing_cell.y][1] = cell_height;
+//         now_table.heads.rowh_height = cell_width;
+//     } else if (editing_cell.y == -1){
+//         now_table.heads.col[editing_cell.x][0] = cell_text;
+//         now_table.heads.col[editing_cell.x][1] = cell_width;
+//         now_table.heads.colh_height = cell_height;
+//     } else {
+//         if(now_table.cells[cell_index][1] === true && now_table.cells[cell_index][2] !== 'parent'){
+//             let parentCellKey = now_table.cells[cell_index][2];
+//             now_table.cells[parentCellKey][0] = cell_text;
+//         } else {
+//             now_table.cells[cell_index][0] = cell_text;
+//         };
+//         now_table.heads.col[editing_cell.x][1] = cell_width;
+//         now_table.heads.row[editing_cell.y][1] = cell_height;
+//     };
+// });
+ele_ce_width.on('input',function(){
+    let val = parseInt($(this).val());
+    $(this).parent().find('p span').text(val);
     if(editing_cell.x == -1){
-        now_table.heads.row[editing_cell.y][0] = cell_text;
-        now_table.heads.row[editing_cell.y][1] = cell_height;
-        now_table.heads.rowh_height = cell_width;
+        now_table.heads.rowh_height = val;
     } else if (editing_cell.y == -1){
-        now_table.heads.col[editing_cell.x][0] = cell_text;
-        now_table.heads.col[editing_cell.x][1] = cell_width;
-        now_table.heads.colh_height = cell_height;
+        now_table.heads.col[editing_cell.x][1] = val;
     } else {
+        now_table.heads.col[editing_cell.x][1] = val;
+    };
+});
+ele_ce_height.on('input',function(){
+    let val = parseInt($(this).val());
+    $(this).parent().find('p span').text(val);
+    if(editing_cell.x == -1){
+        now_table.heads.row[editing_cell.y][1] = val;
+    } else if (editing_cell.y == -1){
+        now_table.heads.colh_height = val;
+    } else {
+        now_table.heads.row[editing_cell.y][1] = val;
+    };
+});
+ele_ce_text.on('input',function(){
+    let val = $(this).val();
+    if(editing_cell.x == -1){
+        now_table.heads.row[editing_cell.y][0] = val;
+    } else if (editing_cell.y == -1){
+        now_table.heads.col[editing_cell.x][0] = val;
+    } else {
+        let cell_index = editing_cell.y + '-' + editing_cell.x;
         if(now_table.cells[cell_index][1] === true && now_table.cells[cell_index][2] !== 'parent'){
             let parentCellKey = now_table.cells[cell_index][2];
-            now_table.cells[parentCellKey][0] = cell_text;
+            now_table.cells[parentCellKey][0] = val;
         } else {
-            now_table.cells[cell_index][0] = cell_text;
+            now_table.cells[cell_index][0] = val;
         };
-        now_table.heads.col[editing_cell.x][1] = cell_width;
-        now_table.heads.row[editing_cell.y][1] = cell_height;
     };
+});
+ele_ce_btn.on('click',function(){
+    ele_ce_panel.removeClass('show');
 });
