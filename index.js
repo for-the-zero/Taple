@@ -276,7 +276,16 @@ natele_canvas.addEventListener('click',function(e){
                     if(key_y > clicked_cell.y){
                         key_y += 1;
                     };
-                    new_table.cells[key_y+'-'+key_x] = now_table.cells[key];
+                    let value = now_table.cells[key];
+                    if(value !== null && value !== undefined && value[1] === true && value[2] !== 'parent'){
+                        let parent_x = parseInt(value[2].split('-')[1]);
+                        let parent_y = parseInt(value[2].split('-')[0]);
+                        if(parent_y > clicked_cell.y){
+                            parent_y += 1;
+                        };
+                        value[2] = parent_y+'-'+parent_x;
+                    };
+                    new_table.cells[key_y+'-'+key_x] = value;
                 };
                 for(let i=0;i<new_table.heads.col.length;i++){
                     let cellpos2beadd = {x:i,y:clicked_cell.y+1};
@@ -310,7 +319,55 @@ natele_canvas.addEventListener('click',function(e){
                     new_table.cells[cellkey2beadd] = ['',need_merge,merge_parent];
                 };
             }else if(add_direction == 'right'){ //向右添加一列
-                //TODO:
+                new_table.heads.col.splice(clicked_cell.x+1,0,['new_col',125]);
+                for(let key in now_table.cells){
+                    let key_x = parseInt(key.split('-')[1]);
+                    let key_y = parseInt(key.split('-')[0]);
+                    if(key_x > clicked_cell.x){
+                        key_x += 1;
+                    };
+                    let value = now_table.cells[key];
+                    if(value !== null && value !== undefined && value[1] === true && value[2] !== 'parent'){
+                        let parent_x = parseInt(value[2].split('-')[1]);
+                        let parent_y = parseInt(value[2].split('-')[0]);
+                        if(parent_x > clicked_cell.x){
+                            parent_x += 1;
+                        };
+                        value[2] = parent_y+'-'+parent_x;
+                    };
+                    new_table.cells[key_y+'-'+key_x] = value;
+                };
+                for(let i=0;i<new_table.heads.row.length;i++){
+                    let cellpos2beadd = {x:clicked_cell.x+1,y:i};
+                    let cellkey2beadd = cellpos2beadd.y+'-'+cellpos2beadd.x;
+                    let need_merge = false;
+                    let merge_parent = null;
+                    if( cellpos2beadd.y+'-'+(cellpos2beadd.x-1) in new_table.cells && cellpos2beadd.y+'-'+(cellpos2beadd.x+1) in new_table.cells ){
+                        let leftone = new_table.cells[cellpos2beadd.y+'-'+(cellpos2beadd.x-1)];
+                        let rightone = new_table.cells[cellpos2beadd.y+'-'+(cellpos2beadd.x+1)];
+                        if(leftone[1] === true && rightone[1] === true){
+                            if(leftone[2] === rightone[2] 
+                                && leftone[2] !== 'parent'
+                            ){
+                                need_merge = true;
+                                merge_parent = leftone[2];
+                            } else if (leftone[2] === 'parent' 
+                                && rightone[2] !== 'parent' 
+                                && rightone[2] === cellpos2beadd.y+'-'+(cellpos2beadd.x-1)
+                            ){
+                                need_merge = true;
+                                merge_parent = rightone[2];
+                            } else if (leftone[2] !== 'parent' 
+                                && rightone[2] === 'parent' 
+                                && leftone[2] === cellpos2beadd.y+'-'+(cellpos2beadd.x+1)
+                            ){
+                                need_merge = true;
+                                merge_parent = leftone[2];
+                            };
+                        };
+                    };
+                    new_table.cells[cellkey2beadd] = ['',need_merge,merge_parent];
+                };
             };
             now_table = new_table;
         } else if(tool == 'del'){
