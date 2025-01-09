@@ -87,7 +87,6 @@ ele_divider_switch.on('click',function(){
 const cvs_ctx = natele_canvas.getContext('2d');
 var now_table = {};
 // Example table start
-// TODO: del this
 now_table = {
     heads: {
         col: [
@@ -107,7 +106,7 @@ now_table = {
         '0-0': ['cell1',true,'parent'],
         '0-1': ['cell2',false,null],
         '0-2': ['cell3',false,null],
-        '1-0': ['cell7',true,'0-0'],
+        '1-0': ['cell9',true,'0-0'],
         '1-1': ['cell4',false,null],
         '1-2': ['cell5',false,null],
         '2-0': ['cell6',false,null],
@@ -252,9 +251,68 @@ natele_canvas.addEventListener('click',function(e){
                 ele_ce_panel.addClass('show');
             };
         } else if(tool == 'split'){
-            //TODO:
+            if(now_table.cells[clicked_cell.y + '-' + clicked_cell.x][1]){
+                let parentCellKey = now_table.cells[clicked_cell.y + '-' + clicked_cell.x][2];
+                if(parentCellKey === 'parent'){
+                    parentCellKey = clicked_cell.y + '-' + clicked_cell.x;
+                };
+                now_table.cells[parentCellKey][1] = false;
+                now_table.cells[parentCellKey][2] = null;
+                for(let key in now_table.cells){
+                    if(now_table.cells[key][2] === parentCellKey){
+                        now_table.cells[key][1] = false;
+                        now_table.cells[key][2] = null;
+                    };
+                };
+            };
         } else if(tool == 'add'){
-            //TODO:
+            let new_table = JSON.parse(JSON.stringify(now_table));
+            new_table.cells = {};
+            if(add_direction == 'down'){ //向下添加一行
+                new_table.heads.row.splice(clicked_cell.y+1,0,['new_row',125]);
+                for(let key in now_table.cells){
+                    let key_x = parseInt(key.split('-')[1]);
+                    let key_y = parseInt(key.split('-')[0]);
+                    if(key_y > clicked_cell.y){
+                        key_y += 1;
+                    };
+                    new_table.cells[key_y+'-'+key_x] = now_table.cells[key];
+                };
+                for(let i=0;i<new_table.heads.col.length;i++){
+                    let cellpos2beadd = {x:i,y:clicked_cell.y+1};
+                    let cellkey2beadd = cellpos2beadd.y+'-'+cellpos2beadd.x;
+                    let need_merge = false;
+                    let merge_parent = null;
+                    if( (cellpos2beadd.y-1)+'-'+cellpos2beadd.x in new_table.cells && (cellpos2beadd.y+1)+'-'+cellpos2beadd.x in new_table.cells ){
+                        let upone = new_table.cells[(cellpos2beadd.y-1)+'-'+cellpos2beadd.x];
+                        let downone = new_table.cells[(cellpos2beadd.y+1)+'-'+cellpos2beadd.x];
+                        if(upone[1] === true && downone[1] === true){
+                            if(upone[2] === downone[2] 
+                                && upone[2] !== 'parent'
+                            ){
+                                need_merge = true;
+                                merge_parent = upone[2];
+                            } else if (upone[2] === 'parent' 
+                                && downone[2] !== 'parent' 
+                                && downone[2] === ((cellpos2beadd.y-1)+'-'+cellpos2beadd.x)
+                            ){
+                                need_merge = true;
+                                merge_parent = downone[2];
+                            } else if (upone[2] !== 'parent' 
+                                && downone[2] === 'parent' 
+                                && upone[2] === ((cellpos2beadd.y+1)+'-'+cellpos2beadd.x)
+                            ){
+                                need_merge = true;
+                                merge_parent = upone[2];
+                            };
+                        };
+                    };
+                    new_table.cells[cellkey2beadd] = ['',need_merge,merge_parent];
+                };
+            }else if(add_direction == 'right'){ //向右添加一列
+                //TODO:
+            };
+            now_table = new_table;
         } else if(tool == 'del'){
             //TODO:
         };
