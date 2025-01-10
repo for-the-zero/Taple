@@ -63,13 +63,52 @@ ele_menu_btn.on('click',function(){
     };
 });
 ele_saveimg.on('click',function(){
-    //TODO:
+    //计算大小，创建画布，保存图片
+    let width = 20 + now_table.heads.rowh_height;
+    let height = 20 + now_table.heads.colh_height;
+    for(let i in now_table.heads.col){
+        width += now_table.heads.col[i][1];
+    };
+    for(let i in now_table.heads.row){
+        height += now_table.heads.row[i][1];
+    };
+    let canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    let ctx = canvas.getContext('2d');
+    taple(ctx,now_table,10,10,cell_divider);
+    let a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = canvas.toDataURL();
+    a.download = `${Date.now()}.png`;
+    a.click();
+    a.remove();
 });
 ele_savejson.on('click',function(){
-    //TODO:
+    let json_str = JSON.stringify(now_table);
+    let a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = URL.createObjectURL(new Blob([json_str], {type: 'application/json'}));
+    a.download = `${Date.now()}.json`;
+    a.click();
+    a.remove();
 }); 
 ele_loadjson.on('click',function(){
-    //TODO:
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = function(e){
+        let file = e.target.files[0];
+        let reader = new FileReader();
+        reader.onload = function(e){
+            let json_str = e.target.result;
+            let json_obj = JSON.parse(json_str);
+            now_table = json_obj;
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+    input.remove();
 });
 var cell_divider = true;
 ele_divider_switch.on('click',function(){
@@ -497,3 +536,5 @@ ele_ce_text.on('input',function(){
 ele_ce_btn.on('click',function(){
     ele_ce_panel.removeClass('show');
 });
+
+//TODO: ctrl+z, zoom, move

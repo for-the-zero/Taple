@@ -112,6 +112,7 @@ body{
     resize: none;
     transition: all 0.1s cubic-bezier(0.76, 0.08, 0.71, 0.91);
     box-sizing: border-box;
+    font-family: 'Wanted Sans Std','Noto Sans SC';
 }
 .celledit-ctrlcont textarea:focus{
     outline: none;
