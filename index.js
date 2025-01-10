@@ -250,6 +250,7 @@ natele_canvas.addEventListener('click',function(e){
                 };
                 ele_ce_panel.addClass('show');
             };
+            ele_ce_text.focus();
         } else if(tool == 'split'){
             if(now_table.cells[clicked_cell.y + '-' + clicked_cell.x][1]){
                 let parentCellKey = now_table.cells[clicked_cell.y + '-' + clicked_cell.x][2];
@@ -373,41 +374,81 @@ natele_canvas.addEventListener('click',function(e){
         } else if(tool == 'del'){
             let new_table = JSON.parse(JSON.stringify(now_table));
             new_table.cells = {};
-            if(del_direction == 'down'){ //向下删除一行
-                new_table.heads.row.splice(clicked_cell.y,1);
-                let parents2del = ['del'];
-                for(let key in now_table.cells){
-                    let key_x = parseInt(key.split('-')[1]);
-                    let key_y = parseInt(key.split('-')[0]);
-                    let value = now_table.cells[key];
-                    if(value[1] === true){
-                        if(value[2] !== 'parent'){
-                            let parent_x = parseInt(value[2].split('-')[1]);
-                            let parent_y = parseInt(value[2].split('-')[0]);
-                            if(parent_y > clicked_cell.y){
-                                parent_y -= 1;
-                            } else if(parent_y === clicked_cell.y){
-                                value[1] = false;
-                                value[2] = 'del';
-                            };
-                            value[2] = parent_y+'-'+parent_x;
-                        } else {
-                            parents2del.push(key);
+            if(add_direction == 'down'){ //向下删除一行
+                if(clicked_cell.x !== -1){
+                    let new_table = JSON.parse(JSON.stringify(now_table));
+                    new_table.cells = {};
+                    new_table.heads.col.splice(clicked_cell.x, 1);
+                    let parents2del = [];
+                    for(let key in now_table.cells){
+                        let key_x = parseInt(key.split('-')[1]);
+                        let key_y = parseInt(key.split('-')[0]);
+                        let value = [...now_table.cells[key]];
+                        if (key_x === clicked_cell.x){continue;};
+                        if (key_x > clicked_cell.x) {
+                            key_x -= 1;
                         };
-                        
+                        if (key_x === clicked_cell.x && value[1] && value[2] === 'parent') {
+                            parents2del.push(`${key_y}-${clicked_cell.x}`);
+                        };
+                        if (value[1] === true && value[2] !== null && value[2] !== 'parent') {
+                            let [parent_y, parent_x] = value[2].split('-').map(Number);
+                            if (parent_x === clicked_cell.x) {
+                                value[1] = false;
+                                value[2] = null;
+                            } else if (parent_x > clicked_cell.x) {
+                                value[2] = `${parent_y}-${parent_x - 1}`;
+                            };
+                        };
+                        new_table.cells[`${key_y}-${key_x}`] = value;
                     };
-                    if(key_y === clicked_cell.y){
-                        continue;
-                    } else if(key_y > clicked_cell.y){
-                        key_y -= 1;
+                    for (let key in new_table.cells) {
+                        let value = new_table.cells[key];
+                        if (value[1] === true && value[2] !== null && parents2del.includes(value[2])) {
+                            value[1] = false;
+                            value[2] = null;
+                        };
                     };
-                    new_table.cells[key_y+'-'+key_x] = value;
+                    now_table = {...new_table};
                 };
-                //TODO:
-            }else if(del_direction == 'right'){ //向右删除一列
-                //TODO:
+            }else if(add_direction == 'right'){ //向右删除一列
+                if(clicked_cell.y !== -1){
+                    let new_table = JSON.parse(JSON.stringify(now_table));
+                    new_table.cells = {};
+                    new_table.heads.row.splice(clicked_cell.y, 1);
+                    let parents2del = [];
+                    for(let key in now_table.cells){
+                        let key_x = parseInt(key.split('-')[1]);
+                        let key_y = parseInt(key.split('-')[0]);
+                        let value = [...now_table.cells[key]];
+                        if (key_y === clicked_cell.y){continue;};
+                        if (key_y > clicked_cell.y) {
+                            key_y -= 1;
+                        };
+                        if (key_y === clicked_cell.y && value[1] && value[2] === 'parent') {
+                            parents2del.push(`${clicked_cell.y}-${key_x}`);
+                        };
+                        if (value[1] === true && value[2] !== null && value[2] !== 'parent') {
+                            let [parent_y, parent_x] = value[2].split('-').map(Number);
+                            if (parent_y === clicked_cell.y) {
+                                value[1] = false;
+                                value[2] = null;
+                            } else if (parent_y > clicked_cell.y) {
+                                value[2] = `${parent_y - 1}-${parent_x}`;
+                            };
+                        };
+                        new_table.cells[`${key_y}-${key_x}`] = value;
+                    };
+                    for (let key in new_table.cells) {
+                        let value = new_table.cells[key];
+                        if (value[1] === true && value[2] !== null && parents2del.includes(value[2])) {
+                            value[1] = false;
+                            value[2] = null;
+                        };
+                    };
+                    now_table = {...new_table};
+                };
             };
-            now_table = new_table;
         };
     };
     // ...
