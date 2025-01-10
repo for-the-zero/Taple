@@ -371,7 +371,43 @@ natele_canvas.addEventListener('click',function(e){
             };
             now_table = new_table;
         } else if(tool == 'del'){
-            //TODO:
+            let new_table = JSON.parse(JSON.stringify(now_table));
+            new_table.cells = {};
+            if(del_direction == 'down'){ //向下删除一行
+                new_table.heads.row.splice(clicked_cell.y,1);
+                let parents2del = ['del'];
+                for(let key in now_table.cells){
+                    let key_x = parseInt(key.split('-')[1]);
+                    let key_y = parseInt(key.split('-')[0]);
+                    let value = now_table.cells[key];
+                    if(value[1] === true){
+                        if(value[2] !== 'parent'){
+                            let parent_x = parseInt(value[2].split('-')[1]);
+                            let parent_y = parseInt(value[2].split('-')[0]);
+                            if(parent_y > clicked_cell.y){
+                                parent_y -= 1;
+                            } else if(parent_y === clicked_cell.y){
+                                value[1] = false;
+                                value[2] = 'del';
+                            };
+                            value[2] = parent_y+'-'+parent_x;
+                        } else {
+                            parents2del.push(key);
+                        };
+                        
+                    };
+                    if(key_y === clicked_cell.y){
+                        continue;
+                    } else if(key_y > clicked_cell.y){
+                        key_y -= 1;
+                    };
+                    new_table.cells[key_y+'-'+key_x] = value;
+                };
+                //TODO:
+            }else if(del_direction == 'right'){ //向右删除一列
+                //TODO:
+            };
+            now_table = new_table;
         };
     };
     // ...
