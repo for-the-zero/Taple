@@ -14,6 +14,7 @@
     <div class="controls-bar">
         <button id="menu-btn" class="material-icons-outlined">menu</button>
         <!--tools-->
+        <button id="move-btn" class="material-icons-outlined">control_camera</button>
         <button id="edit-btn" class="material-icons-outlined">edit_note</button>
         <button id="merge-btn" class="material-icons-outlined">merge</button>
         <button id="split-btn" class="material-icons-outlined">call_split</button>
@@ -43,7 +44,7 @@
         </ul>
     </div>
     <div class="editpanel">
-        <h1>Edit</h1>
+        <h1>Edit<button class="celledit-btn material-icons-outlined">minimize</button></h1>
         <div class="celledit-ctrlcont">
             <p>Text of cell:</p>
             <textarea class="celledit-text-input" width="70%" rows="1"></textarea>
@@ -56,8 +57,6 @@
             <p>Height of cell: <span>100</span></p>
             <input type="range" class="celledit-size-input-y" min="40" max="800" value="100">
         </div>
-        
-        <button class="celledit-btn">close</button>
     </div>
     <div class="floating-merge-tip"><span></span></div>
     <canvas id="canvas"></canvas>
@@ -65,7 +64,7 @@
 
     <script src="https://cdn.jsdmirror.com/npm/jquery"></script>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/p5.js/1.9.4/p5.min.js"></script> -->
-    <script src="core.js"></script>
-    <script src="index.js"></script>
+    <script src="renderer.js"></script>
+    <script src="ui.js"></script>
 </body>
 </html>

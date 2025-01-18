@@ -1,3 +1,4 @@
+const ele_move_btn = $('.controls-bar button#move-btn');
 const ele_edit_btn = $('.controls-bar button#edit-btn');
 const ele_merge_btn = $('.controls-bar button#merge-btn');
 const ele_split_btn = $('.controls-bar button#split-btn');
@@ -26,27 +27,74 @@ const ele_ce_panel = $('.editpanel');
 const natele_canvas = document.getElementById('canvas');
 
 // tool selection
-var tool = 'edit';
-ele_edit_btn.addClass('selected-controls');
+var tool = 'move';
+ele_move_btn.addClass('selected-controls');
 ele_add_bar.hide();
-ele_edit_btn.on('click',function(){
+ele_move_btn.on('click', function(){
+    tool = 'move';
+    ele_move_btn.addClass('selected-controls');
+    ele_edit_btn.removeClass('selected-controls');
+    ele_merge_btn.removeClass('selected-controls');
+    ele_split_btn.removeClass('selected-controls');
+    ele_add_btn.removeClass('selected-controls');
+    ele_del_btn.removeClass('selected-controls');
+    ele_add_bar.hide();
+    document.body.style.cursor = 'move';
+});
+ele_edit_btn.on('click', function(){
     tool = 'edit';
+    ele_move_btn.removeClass('selected-controls');
     ele_edit_btn.addClass('selected-controls');
     ele_merge_btn.removeClass('selected-controls');
     ele_split_btn.removeClass('selected-controls');
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
     ele_add_bar.hide();
+    document.body.style.cursor = 'cell';
 });
-ele_merge_btn.on('click',function(){tool ='merge';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.addClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.removeClass('selected-controls');ele_add_bar.hide();});
-ele_split_btn.on('click',function(){tool ='split';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.addClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.removeClass('selected-controls');ele_add_bar.hide();});
-ele_add_btn.on('click',function(){
-    tool = 'add';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.addClass('selected-controls');ele_del_btn.removeClass('selected-controls');
-    ele_add_bar.show();
+ele_merge_btn.on('click', function(){
+    tool = 'merge';
+    ele_move_btn.removeClass('selected-controls');
+    ele_edit_btn.removeClass('selected-controls');
+    ele_merge_btn.addClass('selected-controls');
+    ele_split_btn.removeClass('selected-controls');
+    ele_add_btn.removeClass('selected-controls');
+    ele_del_btn.removeClass('selected-controls');
+    ele_add_bar.hide();
+    document.body.style.cursor = 'pointer';
 });
-ele_del_btn.on('click',function(){
-    tool = 'del';ele_edit_btn.removeClass('selected-controls');ele_merge_btn.removeClass('selected-controls');ele_split_btn.removeClass('selected-controls');ele_add_btn.removeClass('selected-controls');ele_del_btn.addClass('selected-controls');
+ele_split_btn.on('click', function(){
+    tool = 'split';
+    ele_move_btn.removeClass('selected-controls');
+    ele_edit_btn.removeClass('selected-controls');
+    ele_merge_btn.removeClass('selected-controls');
+    ele_split_btn.addClass('selected-controls');
+    ele_add_btn.removeClass('selected-controls');
+    ele_del_btn.removeClass('selected-controls');
+    ele_add_bar.hide();
+    document.body.style.cursor = 'pointer';
+});
+ele_add_btn.on('click', function(){
+    tool = 'add';
+    ele_move_btn.removeClass('selected-controls');
+    ele_edit_btn.removeClass('selected-controls');
+    ele_merge_btn.removeClass('selected-controls');
+    ele_split_btn.removeClass('selected-controls');
+    ele_add_btn.addClass('selected-controls');
+    ele_del_btn.removeClass('selected-controls');
     ele_add_bar.show();
+    document.body.style.cursor = 'pointer';
+});
+ele_del_btn.on('click', function(){
+    tool = 'del';
+    ele_move_btn.removeClass('selected-controls');
+    ele_edit_btn.removeClass('selected-controls');
+    ele_merge_btn.removeClass('selected-controls');
+    ele_split_btn.removeClass('selected-controls');
+    ele_add_btn.removeClass('selected-controls');
+    ele_del_btn.addClass('selected-controls');
+    ele_add_bar.show();
+    document.body.style.cursor = 'pointer';
 });
 
 // add selection
@@ -63,7 +111,6 @@ ele_menu_btn.on('click',function(){
     };
 });
 ele_saveimg.on('click',function(){
-    //计算大小，创建画布，保存图片
     let width = 20 + now_table.heads.rowh_height;
     let height = 20 + now_table.heads.colh_height;
     for(let i in now_table.heads.col){
@@ -125,6 +172,7 @@ ele_divider_switch.on('click',function(){
 
 const cvs_ctx = natele_canvas.getContext('2d');
 var now_table = {};
+//TODO:
 // Example table start
 now_table = {
     heads: {
@@ -537,4 +585,4 @@ ele_ce_btn.on('click',function(){
     ele_ce_panel.removeClass('show');
 });
 
-//TODO: ctrl+z, zoom, move
+//TODO: ctrl+z, localstorge, move

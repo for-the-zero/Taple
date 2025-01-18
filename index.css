@@ -92,10 +92,10 @@ body{
 }
 
 .celledit-ctrlcont{
-    margin: 10px;
+    margin: 5px;
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 5px;
     justify-content: space-between;
     align-items: center;
     width: 90%;
@@ -122,14 +122,14 @@ body{
     box-sizing: border-box;
 }
 .celledit-btn{
-    left: 50%;
-    transform: translateX(-50%);
-    position: relative;
-    width: 150px;
+    right: 65px;
+    display: inline-block;
+    position: absolute;
+    width: 40px;
     height: 30px;
-    border-radius: 114514px;
+    border-radius: 10px;
     border: none;
-    background-color: lightgray;
+    background-color: #efefef;
     color: black;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     animation: all 0.3s cubic-bezier(0.3, 0.35, 0, 1.00);
