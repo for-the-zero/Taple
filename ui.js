@@ -26,8 +26,12 @@ const ele_ce_panel = $('.editpanel');
 
 const natele_canvas = document.getElementById('canvas');
 
+var view_x = 0;
+var view_y = 90;
+
 // tool selection
 var tool = 'move';
+natele_canvas.style.cursor = 'move';
 ele_move_btn.addClass('selected-controls');
 ele_add_bar.hide();
 ele_move_btn.on('click', function(){
@@ -39,7 +43,7 @@ ele_move_btn.on('click', function(){
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
     ele_add_bar.hide();
-    document.body.style.cursor = 'move';
+    natele_canvas.style.cursor = 'move';
 });
 ele_edit_btn.on('click', function(){
     tool = 'edit';
@@ -50,7 +54,7 @@ ele_edit_btn.on('click', function(){
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
     ele_add_bar.hide();
-    document.body.style.cursor = 'cell';
+    natele_canvas.style.cursor = 'cell';
 });
 ele_merge_btn.on('click', function(){
     tool = 'merge';
@@ -61,7 +65,7 @@ ele_merge_btn.on('click', function(){
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
     ele_add_bar.hide();
-    document.body.style.cursor = 'pointer';
+    natele_canvas.style.cursor = 'pointer';
 });
 ele_split_btn.on('click', function(){
     tool = 'split';
@@ -72,7 +76,7 @@ ele_split_btn.on('click', function(){
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
     ele_add_bar.hide();
-    document.body.style.cursor = 'pointer';
+    natele_canvas.style.cursor = 'pointer';
 });
 ele_add_btn.on('click', function(){
     tool = 'add';
@@ -82,8 +86,9 @@ ele_add_btn.on('click', function(){
     ele_split_btn.removeClass('selected-controls');
     ele_add_btn.addClass('selected-controls');
     ele_del_btn.removeClass('selected-controls');
+    ele_add_bar.css('flex-direction','row');
     ele_add_bar.show();
-    document.body.style.cursor = 'pointer';
+    natele_canvas.style.cursor = 'pointer';
 });
 ele_del_btn.on('click', function(){
     tool = 'del';
@@ -93,8 +98,9 @@ ele_del_btn.on('click', function(){
     ele_split_btn.removeClass('selected-controls');
     ele_add_btn.removeClass('selected-controls');
     ele_del_btn.addClass('selected-controls');
+    ele_add_bar.css('flex-direction','row-reverse');
     ele_add_bar.show();
-    document.body.style.cursor = 'pointer';
+    natele_canvas.style.cursor = 'pointer';
 });
 
 // add selection
@@ -211,13 +217,23 @@ window.addEventListener('resize',function(){
 function draw(){
     cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
     cvs_ctx.stokeStyle = 'black';
-    taple(cvs_ctx,now_table,0,90,cell_divider);
+    taple(cvs_ctx,now_table,view_x,view_y,cell_divider);
     let testing = false;
     if(!testing){
         requestAnimationFrame(draw);
     };
 };
 draw();
+
+var mouse_down = false;
+natele_canvas.addEventListener('mousedown',()=>{mouse_down = true;});
+natele_canvas.addEventListener('mouseup',()=>{mouse_down = false;});
+natele_canvas.addEventListener('mousemove',function(e){
+    if(tool == 'move' && mouse_down){
+        view_x += e.movementX * 1.5;
+        view_y += e.movementY * 1.5;
+    };
+});
 
 var merge_select = null;
 var editing_cell = '';
