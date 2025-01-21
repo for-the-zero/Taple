@@ -176,38 +176,69 @@ ele_divider_switch.on('click',function(){
     };
 });
 
+var undo_history = [];
+var undo_index = -1;
+function new_change(){
+    if(JSON.stringify(now_table) !== undo_history[undo_history.length + undo_index]){
+        if(undo_index !== -1){
+            undo_history = undo_history.slice(0,undo_index + 1);
+            undo_index = -1;
+        };
+        undo_history.push(JSON.stringify(now_table));
+        localStorage.setItem('taple_table',JSON.stringify(now_table));
+    };
+};
+$(document).on('keydown',function(e){
+    if(e.ctrlKey){
+        if(e.key === 'z' || e.key === 'Z'){
+            if(undo_index > -(undo_history.length)){
+                undo_index--;
+                now_table = JSON.parse(undo_history[undo_history.length + undo_index]);
+            };
+        } else if(e.key === 'y' || e.key === 'Y'){
+            if(undo_index < -1){
+                undo_index++;
+                now_table = JSON.parse(undo_history[undo_history.length + undo_index]);
+            };
+        };
+    };
+});
+
 const cvs_ctx = natele_canvas.getContext('2d');
 var now_table = {};
-//TODO:
-// Example table start
-now_table = {
-    heads: {
-        col: [
-            ['c1',300],
-            ['c2',200],
-            ['c3',150],
-        ], 
-        row: [
-            ['r1',100],
-            ['r2',100],
-            ['r3',100],
-        ],
-        colh_height: 80,
-        rowh_height: 70
-    },
-    cells: {
-        '0-0': ['cell1',true,'parent'],
-        '0-1': ['cell2',false,null],
-        '0-2': ['cell3',false,null],
-        '1-0': ['cell9',true,'0-0'],
-        '1-1': ['cell4',false,null],
-        '1-2': ['cell5',false,null],
-        '2-0': ['cell6',false,null],
-        '2-1': ['cell8',false,null],
-        '2-2': ['cell7',false,null],
-    }
+if(localStorage.getItem('taple_table')){
+    now_table = JSON.parse(localStorage.getItem('taple_table'));
+} else {
+    now_table = {
+        heads: {
+            col: [
+                ['c1',300],
+                ['c2',200],
+                ['c3',150],
+            ], 
+            row: [
+                ['r1',100],
+                ['r2',100],
+                ['r3',100],
+            ],
+            colh_height: 80,
+            rowh_height: 70
+        },
+        cells: {
+            '0-0': ['cell1',true,'parent'],
+            '0-1': ['cell2',false,null],
+            '0-2': ['cell3',false,null],
+            '1-0': ['cell9',true,'0-0'],
+            '1-1': ['cell4',false,null],
+            '1-2': ['cell5',false,null],
+            '2-0': ['cell6',false,null],
+            '2-1': ['cell8',false,null],
+            '2-2': ['cell7',false,null],
+        }
+    };
+    localStorage.setItem('taple_table',JSON.stringify(now_table));
 };
-// Example table end
+undo_history.push(JSON.stringify(now_table));
 natele_canvas.width = window.innerWidth * 1.5;
 natele_canvas.height = window.innerHeight * 1.5;
 window.addEventListener('resize',function(){
@@ -238,8 +269,8 @@ natele_canvas.addEventListener('mousemove',function(e){
 var merge_select = null;
 var editing_cell = '';
 natele_canvas.addEventListener('click',function(e){
-    let x = e.offsetX * 1.5;
-    let y = e.offsetY * 1.5 - 90;
+    let x = e.offsetX * 1.5 - view_x;
+    let y = e.offsetY * 1.5 - view_y;
     let clicked_cell = { x: -1, y: -1 };
     let col_head_height = now_table.heads.colh_height;
     let row_head_width = now_table.heads.rowh_height;
@@ -300,6 +331,7 @@ natele_canvas.addEventListener('click',function(e){
                             };
                         };
                     };
+                    new_change();
                 };
             };
             merge_select = null;
@@ -369,6 +401,7 @@ natele_canvas.addEventListener('click',function(e){
                     };
                 };
             };
+            new_change();
         } else if(tool == 'add'){
             let new_table = JSON.parse(JSON.stringify(now_table));
             new_table.cells = {};
@@ -474,6 +507,7 @@ natele_canvas.addEventListener('click',function(e){
                 };
             };
             now_table = new_table;
+            new_change();
         } else if(tool == 'del'){
             let new_table = JSON.parse(JSON.stringify(now_table));
             new_table.cells = {};
@@ -552,9 +586,9 @@ natele_canvas.addEventListener('click',function(e){
                     now_table = {...new_table};
                 };
             };
+            new_change();
         };
     };
-    // ...
 });
 
 // edit
@@ -599,6 +633,5 @@ ele_ce_text.on('input',function(){
 });
 ele_ce_btn.on('click',function(){
     ele_ce_panel.removeClass('show');
+    new_change();
 });
-
-//TODO: ctrl+z, localstorge, move
