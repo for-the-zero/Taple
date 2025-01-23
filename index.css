@@ -2,6 +2,9 @@
     font-family: 'Wanted Sans Std';
     src: url('./WantedSansStd-Regular.otf');
 }
+*{
+    -webkit-tap-highlight-color: transparent;
+}
 body{
     font-family: 'Wanted Sans Std','Noto Sans SC';
     color: #303030;
