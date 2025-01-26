@@ -1,33 +1,3 @@
-/*
-{
-    heads: {
-        col: [
-            ['c1',300],
-            ['c2',200],
-            ['c3',150],
-        ], 
-        row: [
-            ['r1',100],
-            ['r2',100],
-            ['r3',100],
-        ],
-        colh_height: 70,
-        rowh_height: 70
-    },
-    cells: {
-        '0-0': ['cell1',true,'parent'],
-        '0-1': ['cell2',false,null],
-        '0-2': ['cell3',false,null],
-        '1-0': ['',true,'0-0'],
-        '1-1': ['cell4',true,'parent'],
-        '1-2': ['cell5',false,null],
-        '2-0': ['cell6',false,null],
-        '2-1': ['',true,'1-1'],
-        '2-2': ['cell7',false,null],
-    }
-}
-*/
-
 function draw_text(ctx, text, x, y, width, height) {
     if (text.length > 0 && text.trim().length > 0) {
         // 自适应字体大小
@@ -55,7 +25,7 @@ function draw_text(ctx, text, x, y, width, height) {
                 };
             };
             text_lines.push(text_line);
-            line_height = ctx.measureText('哈').width * 1.5;
+            line_height = ctx.measureText('哈').width * 1.05;
             lines_height = line_height * text_lines.length;
             if (lines_height > height) {
                 font_size -= 1;
@@ -81,7 +51,7 @@ function draw_text(ctx, text, x, y, width, height) {
             };
         };
         text_lines.push(text_line);
-        line_height = ctx.measureText('哈').width * 1.5;
+        line_height = ctx.measureText('哈').width * 1.05;
         lines_height = line_height * text_lines.length;
         ctx.textBaseline = 'top';
         for (let i = 0; i < text_lines.length; i++) {
