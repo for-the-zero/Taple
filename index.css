@@ -19,7 +19,7 @@ body{
 .controls-bar,.add-bar{
     display: flex;
     flex-direction: row;
-    flex-wrap: warp;
+    flex-wrap: wrap;
     position: fixed;
     top: 0;
     left: 50%;
@@ -178,19 +178,19 @@ body{
     gap: 7px;
     margin-bottom: 10px
 }
-.ai-api-url, .ai-api-key, .ai-pmt-lang, .ai-pmt-thinking, .ai-pmt-include, .ai-order{
+.ai-api-url, .ai-api-key, .ai-api-model, .ai-pmt-lang, .ai-pmt-thinking, .ai-pmt-include, .ai-order{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
 }
-.ai-api-url > p, .ai-api-key > p, .ai-pmt-lang > p, .ai-pmt-thinking > p, .ai-pmt-include > p, .ai-order > p{margin: 0;margin-right: 7px;}
+.ai-api-url > p, .ai-api-key > p, .ai-api-model > p, .ai-pmt-lang > p, .ai-pmt-thinking > p, .ai-pmt-include > p, .ai-order > p{margin: 0;margin-right: 7px;}
 .ai-api-key > label, .ai-pmt-lang > label{margin-left: 2px;}
 .ai-api-key > input, .ai-pmt-lang > input{margin-right: 2px;}
 .ai-pmt-lang{
     flex-wrap: wrap;
 }
-.ai-api-url > input, .ai-api-key > input, .ai-order > input{
+.ai-api-url > input, .ai-api-key > input, .ai-api-model > input, .ai-order > input{
     flex-grow: 1;
     border-radius: 18px;
     padding: 5px;
@@ -200,10 +200,10 @@ body{
     box-sizing: border-box;
     font-family: 'Wanted Sans Std','Noto Sans SC';
 }
-.ai-api-url > input:focus, .ai-api-key > input:focus, .ai-order > input:focus{
+.ai-api-url > input:focus, .ai-api-key > input:focus, .ai-api-model > input:focus, .ai-order > input:focus{
     outline: none;
     border-radius: 7px;
-    border: 3px solid lightseagreen;
+    border: 2px solid lightseagreen;
     transition: all 0.1s cubic-bezier(0.76, 0.08, 0.71, 0.91);
     box-sizing: border-box;
 }

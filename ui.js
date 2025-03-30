@@ -161,8 +161,7 @@ ele_loadjson.on('click',function(){
             let json_str = e.target.result;
             let json_obj = JSON.parse(json_str);
             now_table = json_obj;
-            undo_history = [json_str];
-            undo_index = -1;
+            new_change();
         };
         reader.readAsText(file);
     };
