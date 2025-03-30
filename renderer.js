@@ -34,7 +34,7 @@ function draw_text(ctx, text, x, y, width, height) {
             };
         };
         // 后退一下并绘制文字
-        font_size -= 1;
+        font_size -= 3;
         ctx.font = `${font_size}px ${font_family}`;
         text_lines = [];
         text_line = '';

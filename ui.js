@@ -15,6 +15,8 @@ const ele_saveimg = $('.as-list #save-img');
 const ele_savejson = $('.as-list #save-json');
 const ele_loadjson= $('.as-list #load-json');
 const ele_divider_switch = $('.as-list #cell-divider');
+const ele_default = $('.as-list #default-table');
+const ele_openaipanel = $('.as-list #open-aipanel');
 
 const ele_fmt = $('.floating-merge-tip');
 
@@ -23,6 +25,8 @@ const ele_ce_width = $('.celledit-size-input-x');
 const ele_ce_height = $('.celledit-size-input-y');
 const ele_ce_btn = $('.celledit-btn');
 const ele_ce_panel = $('.editpanel');
+
+const ele_aipanel = $('.aipanel');
 
 const natele_canvas = document.getElementById('canvas');
 
@@ -175,6 +179,24 @@ ele_divider_switch.on('click',function(){
     } else {
         cell_divider = true;
         ele_divider_switch.find('#scd_text').text('Cell Divider : ON');
+    };
+});
+ele_default.on('click',function(){
+    let d1 = {heads:{col:[['c1',300],['c2',200],['c3',150],],row: [['r1',100],['r2',100],['r3',100],],colh_height: 80,rowh_height: 70},cells: {'0-0': ['cell1',true,'parent'],'0-1': ['cell2',false,null],'0-2': ['cell3',false,null],'1-0': ['cell9',true,'0-0'],'1-1': ['cell4',false,null],'1-2': ['cell5',false,null],'2-0': ['cell6',false,null],'2-1': ['cell8',false,null],'2-2': ['cell7',false,null],}};
+    let d2 = {heads:{col:[['col',100]],row:[['row',100]],colh_height:100,rowh_height:100},cells:{"0-0":["cell",false,null]}};
+    if(Math.random() < 0.5){
+        now_table = d1;
+    } else {
+        now_table = d2;
+    };
+    new_change();
+});
+ele_openaipanel.on('click',function(){
+    if(ele_aipanel.hasClass('show')){
+        ele_aipanel.removeClass('show');
+    } else {
+        ele_menu.removeClass('show');
+        ele_aipanel.addClass('show');
     };
 });
 
