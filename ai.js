@@ -213,7 +213,7 @@ ele_ai_close.on('click',()=>{
     ele_aipanel.removeClass('show');
 });
 
-var ai_request = '';
+var res_text = '';
 ele_ai_gen.on('click',()=>{
     if(!ele_ai_gen.prop('disabled')){
         let ai_url = ele_ai_url.val();
@@ -297,7 +297,7 @@ function generate_msg(){
 
 function process_ai_request(raw){
     let chunks = raw.split('\n\n').filter(Boolean);
-    let res_text = '';
+    res_text = '';
     for(let chunk of chunks){
         let data = chunk.replace('data: ','');
         if(data === '[DONE]'){
@@ -311,6 +311,7 @@ function process_ai_request(raw){
             if(data.choices[0]?.delta?.content){
                 res_text += data.choices[0].delta.content;
             };
+            ele_ai_res.text(res_text);
             console.log(res_text);
         } catch(e) {
             console.error(e);
@@ -318,5 +319,24 @@ function process_ai_request(raw){
     };
 };
 
-ele_ai_apply.on('click',()=>{}); // TODO:
+// 注：得提防一下某些不听我提示词的AI
+ele_ai_apply.on('click',()=>{
+    if((!ele_ai_apply.prop('disabled')) && res_text){
+        let processing_var = res_text;
+        // <result>提取
+        processing_var = processing_var.match(/.*<result>([\s\S]*)$/s);
+        if(processing_var.length <= 0){return null;};
+        processing_var = processing_var[processing_var.length - 1];
+        processing_var = processing_var.replace(/<\/result>[\s\S]*$/s,'');
+        // JSON提取
+        processing_var = processing_var.match(/(\{.*\})/s);
+        if(processing_var.length <= 0){return null;};
+        processing_var = processing_var[processing_var.length - 1];
+        processing_var = JSON.parse(processing_var);
+        // 应用
+        now_table = processing_var;
+        new_change();
+        ele_aipanel.removeClass('show');
+    };
+});
 

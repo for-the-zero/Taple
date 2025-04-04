@@ -271,8 +271,12 @@ window.addEventListener('resize',function(){
 });
 function draw(){
     cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
-    cvs_ctx.stokeStyle = 'black';
-    taple(cvs_ctx,now_table,view_x,view_y,cell_divider);
+    cvs_ctx.strokeStyle = 'black';
+    try{
+        taple(cvs_ctx,now_table,view_x,view_y,cell_divider);
+    }catch(e){
+        // Fuck U man
+    };
     let testing = false;
     if(!testing){
         requestAnimationFrame(draw);
