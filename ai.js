@@ -10,7 +10,7 @@ const pmt_ch = `<task>
 1.2. \`heads.row\` (数组): 包含多个 \`[行标题文本（字符串，可为空）, 行高度（数字）]\`
 1.3. \`heads.colh_height\` (数字): 列标题高度
 1.4. \`heads.rowh_height\` (数字): 行标题宽度
-2. \`cells\` (对象): 定义表格主体单元格的内容和属性（数量为行数×列数，不可缺少）
+2. \`cells\` (对象): 定义表格主体单元格的内容和属性（数量为行数×列数，不可缺少或比行数×列数多）
 2.1. 键 (字符串): 格式为 \`'行索引-列索引'\`，即\`y坐标-x坐标\` (索引从 0 开始，例如\`3-1\`)，表示单元格的位置
 2.2. 值 (数组): 包含三个元素 \`[文本内容（字符串，可为空）, 是否是合并单元格的一部分（布尔值）, 合并信息]\`
 2.2.1. \`文本内容\` (字符串): 该单元格显示的文字。对于合并单元格中的非主单元格，通常为空字符串 \`''\`
@@ -42,7 +42,7 @@ The JSON object contains two top-level keys: \`heads\` and \`cells\`.
 1.2. \`heads.row\` (Array): Contains multiple \`[Row header text (string, can be empty), Row height (number)]\` elements.
 1.3. \`heads.colh_height\` (Number): Column header height.
 1.4. \`heads.rowh_height\` (Number): Row header width.
-2. \`cells\` (Object): Defines the content and properties of the main table cells (The number of entries must equal rows × columns, cannot be missing).
+2. \`cells\` (Object): Defines the content and properties of the main table cells (The number of entries must equal rows × columns, cannot be missing or more than rows × columns).
 2.1. Key (String): Format is \`'row_index-column_index'\`, i.e., \`y_coordinate-x_coordinate\` (Indices start from 0, e.g., \`3-1\`), represents the cell's position.
 2.2. Value (Array): Contains three elements \`[Text content (string, can be empty), Is part of a merged cell (boolean), Merge information]\`.
 2.2.1. \`Text content\` (String): The text displayed in this cell. For non-parent cells within a merged area, this is usually an empty string \`''\`.
@@ -97,7 +97,7 @@ const pmt_ch_thinking = `<task>
 1.2. \`heads.row\` (数组): 包含多个 \`[行标题文本（字符串，可为空）, 行高度（数字）]\`
 1.3. \`heads.colh_height\` (数字): 列标题高度
 1.4. \`heads.rowh_height\` (数字): 行标题宽度
-2. \`cells\` (对象): 定义表格主体单元格的内容和属性（数量为行数×列数，不可缺少）
+2. \`cells\` (对象): 定义表格主体单元格的内容和属性（数量为行数×列数，不可缺少或比行数×列数多）
 2.1. 键 (字符串): 格式为 \`'行索引-列索引'\`，即\`y坐标-x坐标\` (索引从 0 开始，例如\`3-1\`)，表示单元格的位置
 2.2. 值 (数组): 包含三个元素 \`[文本内容（字符串，可为空）, 是否是合并单元格的一部分（布尔值）, 合并信息]\`
 2.2.1. \`文本内容\` (字符串): 该单元格显示的文字。对于合并单元格中的非主单元格，通常为空字符串 \`''\`
@@ -157,7 +157,7 @@ The JSON object contains two top-level keys: \`heads\` and \`cells\`.
 1.2. \`heads.row\` (array): Contains multiple \`[row title text (string, can be empty), row height (number)]\`.  
 1.3. \`heads.colh_height\` (number): Column header height.  
 1.4. \`heads.rowh_height\` (number): Row header width.  
-2. \`cells\` (object): Defines the content and properties of the table body cells (quantity = number of rows × number of columns; cannot be missing).  
+2. \`cells\` (object): Defines the content and properties of the table body cells (quantity = number of rows × number of columns; cannot be missing or more than the number of rows × columns).  
 2.1. Key (string): Format as \`'row index-column index'\`, i.e., \`y-coordinate-x-coordinate\` (indices start from 0, e.g., \`3-1\`), representing the cell's position.  
 2.2. Value (array): Contains three elements \`[text content (string, can be empty), whether it is part of a merged cell (boolean), merge information]\`.  
 2.2.1. \`Text content\` (string): The text displayed in the cell. For non-primary cells in merged cells, it is usually an empty string \`''\`.  
