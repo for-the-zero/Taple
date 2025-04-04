@@ -32,6 +32,7 @@ const natele_canvas = document.getElementById('canvas');
 
 var view_x = 0;
 var view_y = 90;
+const dpr = window.devicePixelRatio || 1.5;
 
 // tool selection
 var tool = 'move';
@@ -262,11 +263,11 @@ if(localStorage.getItem('taple_table')){
     localStorage.setItem('taple_table',JSON.stringify(now_table));
 };
 undo_history.push(JSON.stringify(now_table));
-natele_canvas.width = window.innerWidth * 1.5;
-natele_canvas.height = window.innerHeight * 1.5;
+natele_canvas.width = window.innerWidth * dpr;
+natele_canvas.height = window.innerHeight * dpr;
 window.addEventListener('resize',function(){
-    natele_canvas.width = window.innerWidth * 1.5;
-    natele_canvas.height = window.innerHeight * 1.5;
+    natele_canvas.width = window.innerWidth * dpr;
+    natele_canvas.height = window.innerHeight * dpr;
 });
 function draw(){
     cvs_ctx.clearRect(0,0,natele_canvas.width,natele_canvas.height);
@@ -285,8 +286,8 @@ natele_canvas.addEventListener('mouseup',()=>{mouse_down = false;});
 natele_canvas.addEventListener('mousemove',function(e){
     if(tool == 'move' && mouse_down){
         e.preventDefault();
-        view_x += e.movementX * 1.5;
-        view_y += e.movementY * 1.5;
+        view_x += e.movementX * dpr;
+        view_y += e.movementY * dpr;
     };
 });
 var last_pos_x = 0;
@@ -300,8 +301,8 @@ natele_canvas.addEventListener('touchend',function(e){mouse_down = false;});
 natele_canvas.addEventListener('touchmove',function(e){
     if(tool == 'move' && mouse_down){
         e.preventDefault();
-        view_x += (e.touches[0].clientX - last_pos_x) * 1.5;
-        view_y += (e.touches[0].clientY - last_pos_y) * 1.5;
+        view_x += (e.touches[0].clientX - last_pos_x) * dpr;
+        view_y += (e.touches[0].clientY - last_pos_y) * dpr;
         last_pos_x = e.touches[0].clientX;
         last_pos_y = e.touches[0].clientY;
     };
@@ -310,8 +311,8 @@ natele_canvas.addEventListener('touchmove',function(e){
 var merge_select = null;
 var editing_cell = '';
 natele_canvas.addEventListener('click',function(e){
-    let x = e.offsetX * 1.5 - view_x;
-    let y = e.offsetY * 1.5 - view_y;
+    let x = e.offsetX * dpr - view_x;
+    let y = e.offsetY * dpr - view_y;
     let clicked_cell = { x: -1, y: -1 };
     let col_head_height = now_table.heads.colh_height;
     let row_head_width = now_table.heads.rowh_height;

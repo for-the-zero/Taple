@@ -1,32 +1,4 @@
-//已执行const ele_aipanel = $('.aipanel');
-const ele_ai_url = $('.ai-api-url > input'); // text
-const ele_ai_key = $('.ai-api-key > input'); // password
-const ele_ai_model = $('.ai-api-model > input'); // text
-const ele_ai_pmtlang_en = $('.ai-pmt-lang > input[value="en"]#ai-pmt-t-en'); // radio(checked)
-const ele_ai_pmtlang_ch = $('.ai-pmt-lang > input[value="ch"]#ai-pmt-t-ch'); // radio
-const ele_ai_thinking = $('.ai-pmt-thinking > input'); // checkbox
-const ele_ai_inc = $('.ai-pmt-include > input'); // checkbox
-const ele_ai_order = $('.ai-order > input'); // text
-
-const ele_ai_close = $('.ai-btn-close');
-const ele_ai_gen = $('.ai-btn-generate');
-const ele_ai_apply = $('.ai-btn-apply');
-
-const ele_ai_res = $('.ai-result');
-
-var ai_pmt_lang = 'en';
-var ai_pmt_thinking = true;
-var ai_pmt_inc = true;
-
-ele_ai_pmtlang_en.on('change',function(){ai_pmt_lang = 'en';});
-ele_ai_pmtlang_ch.on('change',function(){ai_pmt_lang = 'ch';});
-ele_ai_thinking.on('change',function(){ai_pmt_thinking = this.checked;});
-ele_ai_inc.on('change',function(){ai_pmt_inc = this.checked;});
-ele_ai_close.on('click',()=>{
-    ele_aipanel.removeClass('show');
-});
-
-// prompts
+// prompts -> line187
 const pmt_ch = `<task>
 你是一个表格数据生成器。你的任务是根据用户的描述，生成特定格式的 JSON 对象，用于定义一个表格的结构和内容。这个 JSON 对象将被一个绘图函数用来绘制表格
 如无特殊要求宽度和高度取150即可，如果文本内容过长，这可以适当增加宽度或高度
@@ -213,32 +185,87 @@ Requirements: Strictly follow the format of the task prompt. Output the contents
 </task>`; // 1672 tokens(OpenAI)
 // -------------------------------------------
 
+//const ele_aipanel = $('.aipanel');
+const ele_ai_url = $('.ai-api-url > input'); // text
+const ele_ai_key = $('.ai-api-key > input'); // password
+const ele_ai_model = $('.ai-api-model > input'); // text
+const ele_ai_pmtlang_en = $('.ai-pmt-lang > input[value="en"]#ai-pmt-t-en'); // radio(checked)
+const ele_ai_pmtlang_ch = $('.ai-pmt-lang > input[value="ch"]#ai-pmt-t-ch'); // radio
+const ele_ai_thinking = $('.ai-pmt-thinking > input'); // checkbox
+const ele_ai_inc = $('.ai-pmt-include > input'); // checkbox
+const ele_ai_order = $('.ai-order > textarea'); // text
+
+const ele_ai_close = $('.ai-btn-close');
+const ele_ai_gen = $('.ai-btn-generate');
+const ele_ai_apply = $('.ai-btn-apply');
+
+const ele_ai_res = $('.ai-result');
+
+var ai_pmt_lang = 'en';
+var ai_pmt_thinking = true;
+var ai_pmt_inc = true;
+
+ele_ai_pmtlang_en.on('change',function(){ai_pmt_lang = 'en';});
+ele_ai_pmtlang_ch.on('change',function(){ai_pmt_lang = 'ch';});
+ele_ai_thinking.on('change',function(){ai_pmt_thinking = this.checked;});
+ele_ai_inc.on('change',function(){ai_pmt_inc = this.checked;});
+ele_ai_close.on('click',()=>{
+    ele_aipanel.removeClass('show');
+});
+
+var ai_request = '';
 ele_ai_gen.on('click',()=>{
-    let ai_url = ele_ai_url.val();
-    let ai_key = ele_ai_key.val();
-    let ai_model = ele_ai_model.val();
-    if(ai_url && ai_key && ai_model && ele_ai_order.val()){
-        let msg = generate_msg();
-        let data = {
-            model: ai_model,
-            messages: msg,
-            stream: true,
-            temperature: 0.9,
+    if(!ele_ai_gen.prop('disabled')){
+        let ai_url = ele_ai_url.val();
+        let ai_key = ele_ai_key.val();
+        let ai_model = ele_ai_model.val();
+        if(ai_url && ai_key && ai_model && ele_ai_order.val()){
+            let msg = generate_msg();
+            let data = {
+                model: ai_model,
+                messages: msg,
+                stream: true,
+                temperature: 0.9,
+            };
+            ele_ai_gen.prop('disabled',true);
+            ele_ai_apply.prop('disabled',true);
+            ele_ai_res.text('Requesting...');
+            $.ajax({
+                url: ai_url + '/chat/completions',
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + ai_key,
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify(data),
+                xhrFields: {onprogress: function(e){
+                    let raw = e.currentTarget.responseText;
+                    process_ai_request(raw);
+                }},
+                success: function(res){
+                    ele_ai_gen.prop('disabled',false);
+                    ele_ai_apply.prop('disabled',false);
+                },
+                error: function(xhr,status,error){
+                    ele_ai_gen.prop('disabled',false);
+                    ele_ai_apply.prop('disabled',false);
+                    res_text = '';
+                    let err_text = 'Something went wrong\n';
+                    err_text += `Code: ${xhr.status}\n`;
+                    err_text += `Status: ${status}\n`;
+                    err_text += `Error: ${error}\n`;
+                    if(xhr.responseJSON){
+                        err_text += `Message: ${xhr.responseJSON.message}\n`;
+                    } else if (xhr.responseText){
+                        err_text += `Message: ${xhr.responseText}\n`;
+                    };
+                    console.error(err_text);
+                    ele_ai_res.text(err_text);
+                },
+            });
+        } else {
+            return null;
         };
-        $.ajax({
-            url: ai_url + '/chat/completions',
-            type: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + ai_key,
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify(data),
-            xhrFields: {}, //TODO:
-            success: function(res){}, //TODO:
-            error: function(xhr,status,error){}, //TODO:
-        });
-    } else {
-        return null;
     };
 });
 
@@ -266,6 +293,29 @@ function generate_msg(){
     msg.push(msg_sys);
     msg.push(msg_usr);
     return msg;
+};
+
+function process_ai_request(raw){
+    let chunks = raw.split('\n\n').filter(Boolean);
+    let res_text = '';
+    for(let chunk of chunks){
+        let data = chunk.replace('data: ','');
+        if(data === '[DONE]'){
+            ele_ai_gen.prop('disabled',false);
+            ele_ai_apply.prop('disabled',false);
+            ele_ai_res.text(res_text);
+            return null;
+        };
+        try{
+            data = JSON.parse(data);
+            if(data.choices[0]?.delta?.content){
+                res_text += data.choices[0].delta.content;
+            };
+            console.log(res_text);
+        } catch(e) {
+            console.error(e);
+        };
+    };
 };
 
 ele_ai_apply.on('click',()=>{}); // TODO:
