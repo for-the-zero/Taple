@@ -13,6 +13,7 @@ A pretty simple and beautiful table made by canvas, a front-end project that run
 - 可以开关单元格分割线 / Toggle cell divider lines
 - - 关闭：更加简约好看 / Off: Simpler and cleaner
 - - 打开：对于合并的单元格，能够清晰明了地看到界限 / On: Clearer and more visible for merged cells
+- AI生成支持（展开菜单，在最底下可以打开面板） / AI-generated support (expand the menu, and you can open the panel at the bottom)
 - 撤销/重做（`ctrl+z / ctrl+y`） // Undo/Redo (`ctrl+z / ctrl+y`)
 - 移动画布 / Move canvas
 - 增删行列 / Add/Delete rows/columns
@@ -60,7 +61,7 @@ Although this project is very simple (is it?), I spent a lot of time on it, and 
 
 You will see 7 buttons at the top.
 
-1. 弹出 菜单/设置/关于 // Pop up menu/Settings/About
+1. 弹出 菜单/设置/关于 // Pop up Menu/Settings/About
 2. 编辑：选择一个单元格后可在弹出菜单中编辑文字、调节大小。点击右上角按钮收起才能够记录到`撤销/重做`里面 / Edit: After selecting a cell, you can edit the text and adjust the size in the pop-up menu. Click the top right button to collapse the menu and record it in `Undo/Redo`.
 3. 合并：选择两个相邻的单元格，即可合并在一起 / Merge: Select two adjacent cells to merge them together.
 4. 取消合并：选择一个单元格，他对应的所有子单元格全部分开来 / Split: Select a cell, and all its subcells will be separated.
