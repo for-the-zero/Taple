@@ -310,6 +310,15 @@ natele_canvas.addEventListener('mousemove',function(e){
         view_y += e.movementY * dpr;
     };
 });
+natele_canvas.addEventListener('wheel',function(e){
+    if(e.shiftKey){
+        view_x -= e.deltaY * dpr;
+        view_y -= e.deltaX * dpr;
+    } else {
+        view_x -= e.deltaX * dpr;
+        view_y -= e.deltaY * dpr;
+    };
+});
 var last_pos_x = 0;
 var last_pos_y = 0;
 natele_canvas.addEventListener('touchstart',function(e){
