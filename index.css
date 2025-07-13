@@ -160,7 +160,7 @@ a[href]:hover{
 
 .floating-merge-tip{
     position: fixed;
-    right: 30px;
+    right: 25px;
     bottom: -70px;
     z-index: 114514191810;
     background-color: white;
@@ -176,7 +176,42 @@ a[href]:hover{
     transition: all 0.15s cubic-bezier(0.3, 0.35, 0, 1.00);
 }
 .floating-merge-tip.show{
-    bottom: 30px;
+    bottom: 25px;
+    transition: all 0.15s cubic-bezier(0.3, 0.35, 0, 1.00);
+}
+.floating-zoom{
+    position: fixed;
+    left: 25px;
+    bottom: 25px;
+    z-index: 114514191810;
+    background-color: white;
+    border-radius: 10px;
+    width: 35px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    user-select: none;
+    transition: all 0.15s cubic-bezier(0.3, 0.35, 0, 1.00);
+}
+.floating-zoom button{
+    border-radius: 5px;
+    border: 0;
+    aspect-ratio: 1/1;
+    padding: 0;
+    background-color: #FFFFFF;
+    width: 100%;
+    font-size: 25px;
+}
+.floating-zoom button:nth-child(3){
+    font-size: 17px;
+    font-family: 'Wanted Sans Std';
+}
+.floating-zoom button:hover{
+    background-color: lightgray;
     transition: all 0.15s cubic-bezier(0.3, 0.35, 0, 1.00);
 }
 
